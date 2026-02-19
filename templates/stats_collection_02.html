@@ -32,10 +32,31 @@
         };
     </script>
 <style>
-        body {
-            background-color: #f9f7f2;
-            color: #2c2826;
+        :root {
+            --terracotta: #bc6c58;
+            --terracotta-dark: #8a4f40;
+            --cream: #f9f7f2;
+            --beige: #eaddcf;
+            --beige-dark: #d3c0b0;
+            --sand: #f2efe9;
+            --charcoal: #2c2826;
+            --accent-brown: #5d4037;
         }
+        body {
+            background-color: var(--cream);
+            color: var(--charcoal);
+        }
+        .text-terracotta { color: var(--terracotta) !important; }
+        .bg-terracotta { background-color: var(--terracotta) !important; }
+        .bg-sand { background-color: var(--sand) !important; }
+        .bg-beige\\/30 { background-color: color-mix(in srgb, var(--beige) 30%, transparent) !important; }
+        .bg-beige-dark { background-color: var(--beige-dark) !important; }
+        .text-charcoal { color: var(--charcoal) !important; }
+        .border-beige { border-color: var(--beige) !important; }
+        .border-terracotta\\/20 { border-color: color-mix(in srgb, var(--terracotta) 20%, transparent) !important; }
+        .bg-charcoal { background-color: var(--charcoal) !important; }
+        .text-cream { color: var(--cream) !important; }
+        .selection\\:bg-terracotta ::selection { background-color: var(--terracotta) !important; }
         .smooth-chart path {
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
