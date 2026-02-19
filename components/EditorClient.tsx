@@ -155,6 +155,25 @@ function areSnapshotsEqual(a: Snapshot | undefined, b: Snapshot) {
   return bKeys.every((key) => a.colors[key] === b.colors[key]);
 }
 
+/** Sync grid-based demographic (or similar) bars: when the value cell contains a percentage, set the bar column span to match. */
+function syncDemographicBars(container: HTMLElement) {
+  const rows = container.querySelectorAll(".grid.grid-cols-12");
+  rows.forEach((row) => {
+    const children = Array.from(row.children) as HTMLElement[];
+    if (children.length !== 2) return;
+    const [barCell, valueCell] = children;
+    const valueText = (valueCell.textContent ?? "").trim();
+    const match = valueText.match(/^(\d+(?:\.\d+)?)\s*%?\s*$/);
+    if (!match) return;
+    const pct = Math.min(100, Math.max(0, parseFloat(match[1])));
+    const barCols = Math.round(12 * pct / 100);
+    const valueCols = 12 - barCols;
+    if (barCols < 1 || valueCols < 1) return;
+    barCell.className = barCell.className.replace(/\bcol-span-\d+/g, `col-span-${barCols}`);
+    valueCell.className = valueCell.className.replace(/\bcol-span-\d+/g, `col-span-${valueCols}`);
+  });
+}
+
 function detectSections(container: HTMLElement): SectionInfo[] {
   const main = container.querySelector("main");
   const target = main ?? container;
@@ -365,30 +384,251 @@ function FloatingImageOverlay({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Floating Text Toolbar                                              */
+/*  Floating Text Toolbar (reference: horizontal bar, light grey)     */
 /* ------------------------------------------------------------------ */
+
+const FONT_SIZE_MIN = 10;
+const FONT_SIZE_MAX = 72;
+const FONT_SIZE_STEP = 2;
 
 function TextToolbar({
   position,
   onFormat,
+  fontFamily,
+  onFontFamilyChange,
+  fonts,
 }: {
   position: { x: number; y: number };
   onFormat: (cmd: string, value?: string) => void;
+  fontFamily: string;
+  onFontFamilyChange: (font: string) => void;
+  fonts: string[];
 }) {
+  const [fontSize, setFontSize] = useState(16);
+  const [fontDropdownOpen, setFontDropdownOpen] = useState(false);
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
+  const [caseMenuOpen, setCaseMenuOpen] = useState(false);
+  const [alignMenuOpen, setAlignMenuOpen] = useState(false);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+
+  const bold = typeof document !== "undefined" && document.queryCommandState?.("bold");
+  const italic = typeof document !== "undefined" && document.queryCommandState?.("italic");
+  const underline = typeof document !== "undefined" && document.queryCommandState?.("underline");
+  const strike = typeof document !== "undefined" && document.queryCommandState?.("strikeThrough");
+
+  const applySize = useCallback(
+    (n: number) => {
+      const size = Math.min(FONT_SIZE_MAX, Math.max(FONT_SIZE_MIN, n));
+      setFontSize(size);
+      onFormat("fontSize", `${size}px`);
+    },
+    [onFormat]
+  );
+
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (toolbarRef.current && !toolbarRef.current.contains(target)) {
+        setFontDropdownOpen(false);
+        setColorPickerOpen(false);
+        setAlignMenuOpen(false);
+        setCaseMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
   return (
-    <div className="text-toolbar" style={{ left: position.x, top: position.y }}>
-      <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("bold"); }} title="Bold">
-        <strong>B</strong>
-      </button>
-      <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("italic"); }} title="Italic">
-        <em>I</em>
-      </button>
-      <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("underline"); }} title="Underline">
-        <u>U</u>
-      </button>
-      <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("strikeThrough"); }} title="Strikethrough">
-        <s>S</s>
-      </button>
+    <div
+      ref={toolbarRef}
+      className="text-toolbar-wrap text-toolbar-wrap--light"
+      style={{ left: position.x, top: position.y }}
+    >
+      <div className="text-toolbar text-toolbar--light">
+        {/* Font family dropdown */}
+        <div className="text-toolbar-font-wrap">
+          <button
+            type="button"
+            className="text-toolbar-font-btn"
+            onMouseDown={(e) => { e.preventDefault(); setFontDropdownOpen((o) => !o); }}
+            title="Font family"
+            aria-label="Font family"
+            aria-expanded={fontDropdownOpen}
+          >
+            {fontFamily}
+          </button>
+          {fontDropdownOpen && (
+            <div className="text-toolbar-dropdown">
+              {fonts.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className="text-toolbar-dropdown-item"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onFontFamilyChange(f);
+                    setFontDropdownOpen(false);
+                  }}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Font size: [-] [number] [+] */}
+        <div className="text-toolbar-size-control">
+          <button
+            type="button"
+            className="text-toolbar-size-btn"
+            onMouseDown={(e) => { e.preventDefault(); applySize(fontSize - FONT_SIZE_STEP); }}
+            title="Decrease size"
+            aria-label="Decrease font size"
+          >
+            −
+          </button>
+          <span className="text-toolbar-size-value" aria-live="polite">
+            {fontSize}
+          </span>
+          <button
+            type="button"
+            className="text-toolbar-size-btn"
+            onMouseDown={(e) => { e.preventDefault(); applySize(fontSize + FONT_SIZE_STEP); }}
+            title="Increase size"
+            aria-label="Increase font size"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Text color */}
+        <div className="text-toolbar-color-wrap">
+          <button
+            type="button"
+            className="text-toolbar-btn text-toolbar-btn--icon"
+            onMouseDown={(e) => { e.preventDefault(); setColorPickerOpen((o) => !o); }}
+            title="Text color"
+            aria-label="Text color"
+            aria-expanded={colorPickerOpen}
+          >
+            <span className="text-toolbar-icon-a">A</span>
+            <span className="text-toolbar-underline" />
+          </button>
+          {colorPickerOpen && (
+            <div className="text-toolbar-color-panel">
+              <input
+                type="color"
+                defaultValue="#000000"
+                onMouseDown={(e) => e.stopPropagation()}
+                onChange={(e) => {
+                  onFormat("foreColor", e.target.value);
+                  setColorPickerOpen(false);
+                }}
+                className="text-toolbar-color-input"
+                title="Pick color"
+              />
+              {["#000000", "#374151", "#dc2626", "#2563eb", "#059669"].map((hex) => (
+                <button
+                  key={hex}
+                  type="button"
+                  className="text-toolbar-color-swatch"
+                  style={{ background: hex }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onFormat("foreColor", hex);
+                    setColorPickerOpen(false);
+                  }}
+                  title={hex}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Bold, Italic, Underline, Strikethrough */}
+        <button
+          type="button"
+          className={`text-toolbar-btn ${bold ? "text-toolbar-btn--active" : ""}`}
+          onMouseDown={(e) => { e.preventDefault(); onFormat("bold"); }}
+          title="Bold"
+          aria-label="Bold"
+        >
+          <strong>B</strong>
+        </button>
+        <button
+          type="button"
+          className={`text-toolbar-btn ${italic ? "text-toolbar-btn--active" : ""}`}
+          onMouseDown={(e) => { e.preventDefault(); onFormat("italic"); }}
+          title="Italic"
+          aria-label="Italic"
+        >
+          <em>I</em>
+        </button>
+        <button
+          type="button"
+          className={`text-toolbar-btn ${underline ? "text-toolbar-btn--active" : ""}`}
+          onMouseDown={(e) => { e.preventDefault(); onFormat("underline"); }}
+          title="Underline"
+          aria-label="Underline"
+        >
+          <u>U</u>
+        </button>
+        <button
+          type="button"
+          className={`text-toolbar-btn ${strike ? "text-toolbar-btn--active" : ""}`}
+          onMouseDown={(e) => { e.preventDefault(); onFormat("strikeThrough"); }}
+          title="Strikethrough"
+          aria-label="Strikethrough"
+        >
+          <s>S</s>
+        </button>
+
+        {/* Case dropdown */}
+        <div className="text-toolbar-case-wrap">
+          <button
+            type="button"
+            className="text-toolbar-btn text-toolbar-btn--icon"
+            onMouseDown={(e) => { e.preventDefault(); setCaseMenuOpen((o) => !o); }}
+            title="Change case"
+            aria-label="Change case"
+            aria-expanded={caseMenuOpen}
+          >
+            <span className="text-toolbar-icon-case">aA</span>
+          </button>
+          {caseMenuOpen && (
+            <div className="text-toolbar-dropdown text-toolbar-case-panel">
+              <button type="button" className="text-toolbar-dropdown-item" onMouseDown={(e) => { e.preventDefault(); onFormat("transformCase", "uppercase"); setCaseMenuOpen(false); }}>UPPERCASE</button>
+              <button type="button" className="text-toolbar-dropdown-item" onMouseDown={(e) => { e.preventDefault(); onFormat("transformCase", "lowercase"); setCaseMenuOpen(false); }}>lowercase</button>
+              <button type="button" className="text-toolbar-dropdown-item" onMouseDown={(e) => { e.preventDefault(); onFormat("transformCase", "capitalize"); setCaseMenuOpen(false); }}>Title Case</button>
+            </div>
+          )}
+        </div>
+
+        {/* Alignment */}
+        <div className="text-toolbar-align-wrap">
+          <button
+            type="button"
+            className="text-toolbar-btn text-toolbar-btn--icon"
+            onMouseDown={(e) => { e.preventDefault(); setAlignMenuOpen((o) => !o); }}
+            title="Alignment"
+            aria-label="Alignment"
+            aria-expanded={alignMenuOpen}
+          >
+            <svg className="text-toolbar-icon-align-svg" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M1 2h14M1 6h10M1 10h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+          {alignMenuOpen && (
+            <div className="text-toolbar-align-panel">
+              <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("justifyLeft"); setAlignMenuOpen(false); }}>Left</button>
+              <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("justifyCenter"); setAlignMenuOpen(false); }}>Center</button>
+              <button type="button" onMouseDown={(e) => { e.preventDefault(); onFormat("justifyRight"); setAlignMenuOpen(false); }}>Right</button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -573,6 +813,7 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
 
   /* --- F11: Text toolbar ------------------------------------------ */
   const [textToolbar, setTextToolbar] = useState<{ x: number; y: number } | null>(null);
+  const textToolbarRangeRef = useRef<Range | null>(null);
 
   /* --- F12: Background override ----------------------------------- */
   const [bgOverride, setBgOverride] = useState("");
@@ -644,7 +885,9 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
   );
 
   const commitFromDom = useCallback(() => {
-    const nextBody = bodyRef.current?.innerHTML ?? bodyHTML;
+    const body = bodyRef.current;
+    if (body) syncDemographicBars(body);
+    const nextBody = body?.innerHTML ?? bodyHTML;
     pushSnapshot({ bodyHTML: nextBody, colors: { ...colorValues } });
     setBodyHTML(nextBody);
     lastBodyHTMLSyncedRef.current = nextBody;
@@ -808,12 +1051,82 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
   /*  F11: Text formatting                                             */
   /* ---------------------------------------------------------------- */
 
+  const applyToSelection = useCallback(
+    (wrap: (range: Range) => void) => {
+      const sel = document.getSelection();
+      const savedRange = textToolbarRangeRef.current;
+      const range = (sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : savedRange) ?? null;
+      if (!range || range.collapsed) return;
+      try {
+        if (savedRange && (!sel || !sel.rangeCount || sel.getRangeAt(0).collapsed)) {
+          sel?.removeAllRanges();
+          sel?.addRange(savedRange);
+        }
+        const r = sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : range;
+        wrap(r);
+        textToolbarRangeRef.current = null;
+      } catch {
+        /* ignore */
+      }
+    },
+    []
+  );
+
   const onFormat = useCallback(
-    (cmd: string) => {
-      document.execCommand(cmd, false);
+    (cmd: string, value?: string) => {
+      if (cmd === "fontSize" && value) {
+        applyToSelection((r) => {
+          const fragment = r.cloneContents();
+          const div = document.createElement("div");
+          div.appendChild(fragment);
+          const span = document.createElement("span");
+          span.style.fontSize = value;
+          span.innerHTML = div.innerHTML;
+          r.deleteContents();
+          r.insertNode(span);
+          r.setStartAfter(span);
+          r.collapse(true);
+          document.getSelection()?.removeAllRanges();
+          document.getSelection()?.addRange(r);
+        });
+      } else if (cmd === "fontName" && value) {
+        applyToSelection((r) => {
+          const fragment = r.cloneContents();
+          const div = document.createElement("div");
+          div.appendChild(fragment);
+          const span = document.createElement("span");
+          span.style.fontFamily = value === "Default" ? "" : `'${value}', sans-serif`;
+          span.innerHTML = div.innerHTML;
+          r.deleteContents();
+          r.insertNode(span);
+          r.setStartAfter(span);
+          r.collapse(true);
+          document.getSelection()?.removeAllRanges();
+          document.getSelection()?.addRange(r);
+        });
+      } else if (cmd === "transformCase" && value) {
+        applyToSelection((r) => {
+          const text = r.toString();
+          const transformed =
+            value === "uppercase"
+              ? text.toUpperCase()
+              : value === "lowercase"
+                ? text.toLowerCase()
+                : text.replace(/\b\w/g, (c) => c.toUpperCase());
+          const textNode = document.createTextNode(transformed);
+          r.deleteContents();
+          r.insertNode(textNode);
+          r.setStartAfter(textNode);
+          r.collapse(true);
+          document.getSelection()?.removeAllRanges();
+          document.getSelection()?.addRange(r);
+        });
+      } else {
+        document.execCommand(cmd, false, value);
+      }
       setTimeout(() => commitFromDom(), 0);
     },
-    [commitFromDom]
+    [commitFromDom, applyToSelection]
   );
 
   /* ---------------------------------------------------------------- */
@@ -1197,6 +1510,18 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
         el.setAttribute("data-element-id", `el-${Math.random().toString(36).slice(2, 9)}`);
       });
 
+      /* Stat / metric divs (e.g. demographic bar values, data-metric numbers) */
+      const statPattern = /^\s*[\d,.]+\s*%?\s*$/;
+      body.querySelectorAll<HTMLElement>("div.data-metric, div[data-stat]").forEach((el) => {
+        const text = el.textContent?.trim();
+        if (!text) return;
+        if (!statPattern.test(text) && !el.hasAttribute("data-stat")) return;
+        if (el.hasAttribute("data-editable")) return;
+        el.setAttribute("contenteditable", "true");
+        el.setAttribute("data-editable", "true");
+        el.setAttribute("data-element-id", `el-${Math.random().toString(36).slice(2, 9)}`);
+      });
+
       /* Progress bars */
       const progressBars = body.querySelectorAll<HTMLElement>(".thin-progress-bar");
       progressBars.forEach((bar, index) => {
@@ -1240,6 +1565,12 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
       if (target.closest("[data-editable='true']")) commitFromDom();
     };
 
+    const onInput = () => {
+      const active = document.activeElement as HTMLElement | null;
+      if (active?.closest?.(".grid.grid-cols-12") && active?.closest?.("[data-editable='true']"))
+        syncDemographicBars(body);
+    };
+
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!target) return;
@@ -1268,11 +1599,13 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     };
 
     body.addEventListener("blur", onBlur, true);
+    body.addEventListener("input", onInput, true);
     body.addEventListener("click", onClick);
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(retry);
       body.removeEventListener("blur", onBlur, true);
+      body.removeEventListener("input", onInput, true);
       body.removeEventListener("click", onClick);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1287,20 +1620,28 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
 
     const onSelectionChange = () => {
       const sel = window.getSelection();
-      if (!sel || sel.isCollapsed || !sel.rangeCount) {
-        setTextToolbar(null);
+      const focusInToolbar = document.activeElement?.closest?.(".text-toolbar-wrap");
+      if (!sel || !sel.rangeCount) {
+        if (!focusInToolbar) {
+          setTextToolbar(null);
+          textToolbarRangeRef.current = null;
+        }
         return;
       }
       const anchor = sel.anchorNode;
       const parent =
         anchor instanceof HTMLElement ? anchor : anchor?.parentElement;
       if (!parent?.closest("[data-editable='true']")) {
-        setTextToolbar(null);
+        if (!focusInToolbar) {
+          setTextToolbar(null);
+          textToolbarRangeRef.current = null;
+        }
         return;
       }
       const range = sel.getRangeAt(0);
+      textToolbarRangeRef.current = range.cloneRange();
       const rect = range.getBoundingClientRect();
-      setTextToolbar({ x: rect.left + rect.width / 2 - 60, y: rect.top - 44 });
+      setTextToolbar({ x: rect.left + rect.width / 2, y: rect.top - 48 });
     };
 
     document.addEventListener("selectionchange", onSelectionChange);
@@ -1452,7 +1793,7 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
           </button>
           {/* F9: Export settings */}
           <button
-            className="editor-btn"
+            className="editor-btn editor-btn-icon"
             onClick={() => setShowExportSettings(true)}
             type="button"
             title="Export settings"
@@ -1726,7 +2067,15 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
       )}
 
       {/* F11: Text formatting toolbar */}
-      {textToolbar && isEditMode && <TextToolbar position={textToolbar} onFormat={onFormat} />}
+      {textToolbar && isEditMode && (
+        <TextToolbar
+          position={textToolbar}
+          onFormat={onFormat}
+          fontFamily={fontOverride}
+          onFontFamilyChange={(font) => onFormat("fontName", font)}
+          fonts={CURATED_FONTS}
+        />
+      )}
 
       {/* Element selection toolbar (Ctrl+Click to select, then Delete/Copy/Paste) */}
       {isEditMode && (
