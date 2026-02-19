@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Social Media Report - Q1 2026 - TERMINAL</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'crt-bg': '#0a0b0a',
+                        'crt-green': '#00ff41',
+                        'crt-amber': '#ffb000',
+                        'crt-dim': '#004411',
+                        'crt-border': '#333333',
+                    },
+                    fontFamily: {
+                        mono: ["'VT323'", "monospace"],
+                        display: ["'Space Mono'", "monospace"],
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-crt-bg text-crt-green font-mono selection:bg-crt-green selection:text-crt-bg;
+                background-image: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 100%), 
+                                  linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                                  linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+                background-size: 100% 100%, 100% 2px, 3px 100%;
+            }
+        }
+        .terminal-window {
+            @apply border-2 border-crt-dim bg-black/40 p-4 relative overflow-hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+        }
+        .terminal-header {
+            @apply border-b-2 border-crt-dim mb-4 pb-2 flex justify-between items-center text-xs tracking-tighter;
+        }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 2147483647;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 255, 65, 0.03) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: fixed;
+            bottom: 100%;
+            left: 0;
+            pointer-events: none;
+        }
+        .progress-bar-bg {
+            @apply h-4 w-full bg-crt-dim relative border border-crt-green/30;
+        }
+        .progress-bar-fill {
+            @apply h-full bg-crt-green;
+        }
+        .ascii-logo {
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1;
+        }
+        .pixel-art-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 antialiased">
+<div class="max-w-6xl mx-auto space-y-8">
+<header class="terminal-window">
+<div class="terminal-header">
+<span>SYS_REPORT_v1.0.exe</span>
+<span>DATE: 01_04_2026</span>
+</div>
+<h1 class="text-4xl md:text-6xl text-center uppercase tracking-widest font-bold">
+            Social Media Report - Q1 2026
+        </h1>
+<div class="mt-4 text-center text-crt-amber animate-pulse">
+            [ STATUS: COMPILING DATA... COMPLETE ]
+        </div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-5 space-y-6">
+<div class="terminal-window">
+<div class="terminal-header">
+<span>PATH: /PLATFORMS/META/FB</span>
+<span>00110001</span>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<div class="ascii-logo text-2xl">[F]</div>
+<h2 class="text-3xl font-bold uppercase tracking-widest">Facebook</h2>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Total Impression</span>
+<span class="text-3xl font-bold text-crt-amber">1,905</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Total Engagement</span>
+<span class="text-3xl font-bold text-crt-amber">274</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Engagement Rate</span>
+<span class="text-3xl font-bold text-crt-amber">14%</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">New Followers</span>
+<span class="text-3xl font-bold text-crt-amber">137</span>
+</div>
+</div>
+</div>
+<div class="terminal-window">
+<div class="terminal-header">
+<span>PATH: /PLATFORMS/META/IG</span>
+<span>00110010</span>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<div class="ascii-logo text-2xl">[IG]</div>
+<h2 class="text-3xl font-bold uppercase tracking-widest text-crt-amber">Instagram</h2>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Total Impression</span>
+<span class="text-3xl font-bold">1,905</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Total Engagement</span>
+<span class="text-3xl font-bold">274</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">Engagement Rate</span>
+<span class="text-3xl font-bold">14%</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-xs uppercase opacity-70">New Followers</span>
+<span class="text-3xl font-bold">137</span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7 terminal-window">
+<div class="terminal-header">
+<span>MODULE: TRAFFIC_ANALYZER</span>
+<span>THREAD: REACH_PROC</span>
+</div>
+<h2 class="text-3xl font-bold uppercase mb-8 border-b border-crt-dim pb-2">Reach Performance by Type</h2>
+<div class="space-y-12">
+<div>
+<h3 class="text-xl mb-4 text-crt-amber opacity-80">&gt; FB_DATA_SET</h3>
+<div class="space-y-4 font-display">
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_FEED</span>
+<span class="text-crt-green">....................... 137</span>
+</div>
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_REELS</span>
+<span class="text-crt-green">....................... 7,071</span>
+</div>
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_STORY</span>
+<span class="text-crt-green">....................... 100</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xl mb-4 text-crt-amber opacity-80">&gt; IG_DATA_SET</h3>
+<div class="space-y-4 font-display">
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_STORY</span>
+<span class="text-crt-green">....................... 635</span>
+</div>
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_POST</span>
+<span class="text-crt-green">....................... 5,145</span>
+</div>
+<div class="flex justify-between items-center border-b border-crt-dim/50 pb-1">
+<span>_REELS</span>
+<span class="text-crt-green">....................... 436</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section class="terminal-window">
+<div class="terminal-header">
+<span>PROC: POPULATION_STATS</span>
+<span>GNDR_DIST_v2</span>
+</div>
+<h2 class="text-3xl font-bold uppercase mb-8 text-center">Demographic Stats</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="uppercase">FB: Male</span>
+<span class="text-crt-amber">64%</span>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill w-[64%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="uppercase">IG: Male</span>
+<span class="text-crt-amber">70%</span>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill w-[70%]"></div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="uppercase">FB: Female</span>
+<span class="text-crt-amber">36%</span>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill w-[36%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="uppercase">IG: Female</span>
+<span class="text-crt-amber">30%</span>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill w-[30%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="terminal-window">
+<div class="terminal-header">
+<span>CORE_METRICS_DUMP</span>
+<span>HEX_A4B2</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<h3 class="text-xl font-bold mb-4 uppercase text-center border border-crt-dim p-1 bg-crt-dim/20">FB_NODE</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Shares</span>
+<span class="text-2xl font-bold">1,905</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Views</span>
+<span class="text-2xl font-bold">274</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Visits</span>
+<span class="text-2xl font-bold">14%</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Clicks</span>
+<span class="text-2xl font-bold">137</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4 uppercase text-center border border-crt-dim p-1 bg-crt-dim/20">IG_NODE</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Shares</span>
+<span class="text-2xl font-bold">1,905</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Views</span>
+<span class="text-2xl font-bold">274</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Visits</span>
+<span class="text-2xl font-bold">14%</span>
+</div>
+<div class="border border-crt-dim p-3">
+<span class="block text-[10px] uppercase">Clicks</span>
+<span class="text-2xl font-bold">137</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="terminal-window">
+<div class="terminal-header">
+<span>GPU_RENDER: CONTENT_HIGH_PRIO</span>
+<span>PIXEL_MAP_1.0</span>
+</div>
+<h2 class="text-3xl font-bold text-center uppercase mb-8">Top Performing Content</h2>
+<div class="flex flex-col lg:flex-row gap-8">
+<div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-black border-2 border-crt-dim">
+<div class="pixel-art-grid w-64 h-64 border-4 border-crt-green p-4">
+<div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green/10"></div><div class="bg-crt-dim"></div><div class="bg-crt-dim"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div>
+<div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-green/10"></div><div class="bg-crt-dim"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div>
+<div class="bg-crt-green/10"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-dim"></div>
+<div class="bg-crt-dim"></div><div class="bg-crt-green/10"></div><div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div><div class="bg-crt-green/10"></div><div class="bg-crt-dim"></div>
+<div class="bg-crt-dim"></div><div class="bg-crt-green/10"></div><div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div><div class="bg-crt-green/10"></div><div class="bg-crt-dim"></div>
+<div class="bg-crt-dim"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-dim"></div>
+<div class="bg-crt-green"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-dim"></div><div class="bg-crt-dim"></div><div class="bg-crt-amber"></div><div class="bg-crt-amber"></div><div class="bg-crt-green"></div>
+<div class="bg-crt-green"></div><div class="bg-crt-green"></div><div class="bg-crt-dim"></div><div class="bg-crt-dim"></div><div class="bg-crt-dim"></div><div class="bg-crt-dim"></div><div class="bg-crt-green"></div><div class="bg-crt-green"></div>
+</div>
+</div>
+<div class="w-full lg:w-1/2 space-y-4">
+<div class="flex justify-between items-center p-4 border border-crt-dim bg-crt-dim/10">
+<div>
+<span class="block text-xs text-crt-amber uppercase">Views</span>
+<span class="text-4xl font-bold">478</span>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">visibility</span>
+</div>
+<div class="flex justify-between items-center p-4 border border-crt-dim bg-crt-dim/10">
+<div>
+<span class="block text-xs text-crt-amber uppercase">Reach</span>
+<span class="text-4xl font-bold">270</span>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">podcasts</span>
+</div>
+<div class="flex justify-between items-center p-4 border border-crt-dim bg-crt-dim/10">
+<div>
+<span class="block text-xs text-crt-amber uppercase">Interactions</span>
+<span class="text-4xl font-bold">35</span>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">touch_app</span>
+</div>
+<div class="flex justify-between items-center p-4 border border-crt-dim bg-crt-dim/10">
+<div>
+<span class="block text-xs text-crt-amber uppercase">Comments</span>
+<span class="text-4xl font-bold">26</span>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">chat_bubble</span>
+</div>
+</div>
+</div>
+</section>
+<section class="terminal-window">
+<div class="terminal-header">
+<span>INTEL_REPORT: AI_SUMMARY</span>
+<span>END_OF_TRANS</span>
+</div>
+<h2 class="text-3xl font-bold mb-6 border-b border-crt-dim pb-4 uppercase">Summary:</h2>
+<ul class="space-y-6 text-lg">
+<li class="flex gap-4">
+<span class="flex-shrink-0 text-crt-amber font-bold">[!]</span>
+<p>
+<strong class="text-crt-amber uppercase">Exceptional Engagement:</strong> Achieved a standout 14.38% engagement rate, significantly outperforming the 2026 industry median (~0.15%) and proving high content resonance.
+                </p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 text-crt-amber font-bold">[!]</span>
+<p>
+<strong class="text-crt-amber uppercase">Accelerated Growth:</strong> Successfully expanded the community with 137 net new followers, demonstrating a high conversion rate from "reached accounts" to "loyal followers."
+                </p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 text-crt-amber font-bold">[!]</span>
+<p>
+<strong class="text-crt-amber uppercase">High-Impact Visibility:</strong> Generated 5,145 impressions and reached 3,389 unique accounts, with static posts and the "Don't Ghost" creative serving as the primary drivers.
+                </p>
+</li>
+<li class="flex gap-4">
+<span class="flex-shrink-0 text-crt-amber font-bold">[!]</span>
+<p>
+<strong class="text-crt-amber uppercase">Strategic Optimization:</strong> While initial hooks are strong, the key growth lever for next month is increasing video retention beyond the 3-second mark to boost algorithmic reach.
+                </p>
+</li>
+<li class="flex gap-4 pl-10 border-l-2 border-crt-amber/30 mt-8">
+<p class="italic text-crt-amber opacity-90">
+                    &gt; Would you like me to generate a specific "Content Theme" for next month based on these successful results? [Y/N]_
+                </p>
+</li>
+</ul>
+</section>
+</div>
+<footer class="text-center p-12 text-crt-dim uppercase tracking-widest text-sm">
+    © 2026 CRT_TERMINAL_INTERFACE // NO_USER_LOGGED_IN
+</footer>
+<div class="scanline"></div>
+
+</body></html>

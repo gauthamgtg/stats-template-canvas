@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arcade Dashboard - Social Media Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Orbitron:wght@400;700;900&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "arcade-bg": "#0D0221", // Deep Navy/Purple
+                        "arcade-card": "#1A0B2E",
+                        "arcade-neon-pink": "#FF00FF",
+                        "arcade-neon-cyan": "#00FFFF",
+                        "arcade-neon-yellow": "#FFFF00",
+                        "arcade-text-main": "#E0E0FF",
+                        "arcade-border": "#2D1B4E",
+                    },
+                    fontFamily: {
+                        pixel: ["'Press Start 2P'", "cursive"],
+                        lcd: ["'VT323'", "monospace"],
+                        heading: ["'Orbitron'", "sans-serif"],
+                        body: ["'Orbitron'", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --neon-pink: #FF00FF;
+            --neon-cyan: #00FFFF;
+        }
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0D0221;
+            background-image: 
+                linear-gradient(rgba(13, 2, 33, 0.8) 0%, rgba(13, 2, 33, 0.8) 100%),
+                linear-gradient(90deg, #1A0B2E 1px, transparent 1px),
+                linear-gradient(#1A0B2E 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: #E0E0FF;
+        }
+        .neon-glow-pink {
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+        }
+        .neon-glow-cyan {
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+        }
+        .arcade-border-glow {
+            border: 2px solid #2D1B4E;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+        }
+        .arcade-border-glow:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        .lcd-value {
+            font-family: 'VT323', monospace;
+            font-size: 2.5rem;
+            line-height: 1;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+        .thin-progress-bar {
+            height: 8px;
+            background-color: #1A0B2E;
+            border: 1px solid #2D1B4E;
+            overflow: hidden;
+            position: relative;
+        }
+        .thin-progress-fill {
+            height: 100%;
+            transition: width 1s ease-in-out;
+            box-shadow: 0 0 10px currentColor;
+        }
+        .scanline {
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.05) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .pixel-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.65rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-12">
+<div class="scanline"></div>
+<main class="max-w-6xl mx-auto space-y-12 relative z-0">
+<header class="text-center space-y-4 mb-16">
+<span class="pixel-label uppercase tracking-widest text-arcade-neon-pink neon-glow-pink">SYSTEM STATUS: ACTIVE</span>
+<h1 class="text-3xl md:text-5xl font-black text-arcade-neon-cyan neon-glow-cyan italic uppercase tracking-tighter">Quarterly Performance Insights</h1>
+<div class="h-1.5 w-48 bg-arcade-neon-pink mx-auto mt-6 shadow-[0_0_15px_#FF00FF]"></div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-arcade-card rounded-none p-6 arcade-border-glow transition-all">
+<div class="flex items-start justify-between mb-4">
+<div>
+<p class="pixel-label text-arcade-text-main opacity-70 mb-2">Total Reach</p>
+<h3 class="lcd-value">124.5k</h3>
+</div>
+<span class="material-symbols-outlined text-arcade-neon-cyan">public</span>
+</div>
+<div class="flex items-center gap-2 pixel-label text-[10px] text-green-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12.5% VS LAST MONTH</span>
+</div>
+</div>
+<div class="bg-arcade-card rounded-none p-6 arcade-border-glow transition-all">
+<div class="flex items-start justify-between mb-4">
+<div>
+<p class="pixel-label text-arcade-text-main opacity-70 mb-2">Engagement</p>
+<h3 class="lcd-value text-arcade-neon-pink" style="color: var(--neon-pink); text-shadow: 0 0 8px rgba(255, 0, 255, 0.5);">8.2k</h3>
+</div>
+<span class="material-symbols-outlined text-arcade-neon-pink">favorite</span>
+</div>
+<div class="flex items-center gap-2 pixel-label text-[10px] text-green-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+5.2% VS LAST MONTH</span>
+</div>
+</div>
+<div class="bg-arcade-card rounded-none p-6 arcade-border-glow transition-all">
+<div class="flex items-start justify-between mb-4">
+<div>
+<p class="pixel-label text-arcade-text-main opacity-70 mb-2">Followers</p>
+<h3 class="lcd-value">45.9k</h3>
+</div>
+<span class="material-symbols-outlined text-arcade-neon-cyan">group_add</span>
+</div>
+<div class="flex items-center gap-2 pixel-label text-[10px] text-red-500">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-0.8% VS LAST MONTH</span>
+</div>
+</div>
+<div class="bg-arcade-card rounded-none p-6 arcade-border-glow transition-all">
+<div class="flex items-start justify-between mb-4">
+<div>
+<p class="pixel-label text-arcade-text-main opacity-70 mb-2">Conversion</p>
+<h3 class="lcd-value text-arcade-neon-yellow" style="color: #FFFF00; text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);">2.4%</h3>
+</div>
+<span class="material-symbols-outlined text-arcade-neon-yellow">ads_click</span>
+</div>
+<div class="flex items-center gap-2 pixel-label text-[10px] text-green-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+1.1% VS LAST MONTH</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<div class="bg-arcade-card rounded-none p-8 arcade-border-glow relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-arcade-neon-pink opacity-10 rotate-45 translate-x-12 -translate-y-12"></div>
+<div class="flex items-center gap-4 mb-10 border-b border-arcade-border pb-4">
+<span class="material-symbols-outlined text-3xl text-arcade-neon-pink">photo_camera</span>
+<h2 class="text-xl font-black text-arcade-text-main uppercase tracking-widest italic">Instagram Insights</h2>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Stories Reach</span>
+<span class="lcd-value text-xl">85%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-pink text-arcade-neon-pink" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Reels Engagement</span>
+<span class="lcd-value text-xl">62%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-pink text-arcade-neon-pink" style="width: 62%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Post Interactions</span>
+<span class="lcd-value text-xl">45%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-pink text-arcade-neon-pink" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<div class="mt-10 flex gap-4 pt-8 border-t border-arcade-border">
+<div class="flex-1">
+<p class="pixel-label text-[8px] text-arcade-neon-cyan opacity-70">Avg Likes</p>
+<p class="lcd-value text-2xl mt-1">1,240</p>
+</div>
+<div class="flex-1 border-l border-arcade-border pl-4">
+<p class="pixel-label text-[8px] text-arcade-neon-cyan opacity-70">Avg Comments</p>
+<p class="lcd-value text-2xl mt-1">86</p>
+</div>
+<div class="flex-1 border-l border-arcade-border pl-4">
+<p class="pixel-label text-[8px] text-arcade-neon-cyan opacity-70">Saves</p>
+<p class="lcd-value text-2xl mt-1">320</p>
+</div>
+</div>
+</div>
+<div class="bg-arcade-card rounded-none p-8 arcade-border-glow relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-arcade-neon-cyan opacity-10 rotate-45 translate-x-12 -translate-y-12"></div>
+<div class="flex items-center gap-4 mb-10 border-b border-arcade-border pb-4">
+<span class="material-symbols-outlined text-3xl text-arcade-neon-cyan">social_leaderboard</span>
+<h2 class="text-xl font-black text-arcade-text-main uppercase tracking-widest italic">Facebook Insights</h2>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Page Views</span>
+<span class="lcd-value text-xl">78%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-cyan text-arcade-neon-cyan" style="width: 78%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Link Clicks</span>
+<span class="lcd-value text-xl">54%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-cyan text-arcade-neon-cyan" style="width: 54%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="pixel-label text-[10px] text-arcade-text-main">Video Retention</span>
+<span class="lcd-value text-xl">33%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-arcade-neon-cyan text-arcade-neon-cyan" style="width: 33%"></div>
+</div>
+</div>
+</div>
+<div class="mt-10 flex gap-4 pt-8 border-t border-arcade-border">
+<div class="flex-1">
+<p class="pixel-label text-[8px] text-arcade-neon-pink opacity-70">Shares</p>
+<p class="lcd-value text-2xl mt-1">450</p>
+</div>
+<div class="flex-1 border-l border-arcade-border pl-4">
+<p class="pixel-label text-[8px] text-arcade-neon-pink opacity-70">Reactions</p>
+<p class="lcd-value text-2xl mt-1">2.1k</p>
+</div>
+<div class="flex-1 border-l border-arcade-border pl-4">
+<p class="pixel-label text-[8px] text-arcade-neon-pink opacity-70">CTR</p>
+<p class="lcd-value text-2xl mt-1">1.8%</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-4 bg-arcade-card rounded-none p-8 arcade-border-glow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-black text-arcade-neon-pink uppercase mb-8 tracking-widest italic">Demographics</h2>
+<div class="space-y-10">
+<div class="flex items-center justify-center relative w-44 h-44 mx-auto">
+<svg class="w-full h-full transform -rotate-90 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]" viewBox="0 0 36 36">
+<path class="text-arcade-neon-cyan" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="70, 100" stroke-width="4"></path>
+<path class="text-arcade-neon-pink" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="30, 100" stroke-dashoffset="-70" stroke-width="4"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="lcd-value text-4xl">70%</span>
+<span class="pixel-label text-[8px] text-arcade-text-main opacity-70">FEMALE</span>
+</div>
+</div>
+<div class="space-y-4 pt-4">
+<div class="flex items-center gap-3 border-l-2 border-arcade-neon-cyan pl-3">
+<span class="pixel-label text-[9px] text-arcade-text-main flex-1">Female Audience</span>
+<span class="lcd-value text-2xl">70%</span>
+</div>
+<div class="flex items-center gap-3 border-l-2 border-arcade-neon-pink pl-3">
+<span class="pixel-label text-[9px] text-arcade-text-main flex-1">Male Audience</span>
+<span class="lcd-value text-2xl">30%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 bg-arcade-card rounded-none p-8 arcade-border-glow flex flex-col md:flex-row gap-8 items-center border-t-4 border-arcade-neon-cyan">
+<div class="w-full md:w-5/12">
+<div class="aspect-[4/5] w-full rounded-none overflow-hidden border-2 border-arcade-neon-cyan relative bg-arcade-bg group">
+<div class="absolute inset-0 bg-gradient-to-tr from-arcade-neon-pink/30 to-arcade-neon-cyan/30"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<span class="material-symbols-outlined text-7xl text-arcade-neon-yellow drop-shadow-[0_0_15px_#FFFF00] mb-6">auto_awesome</span>
+<h3 class="text-2xl font-black text-arcade-neon-cyan italic uppercase tracking-tighter neon-glow-cyan">Top Performer</h3>
+<p class="pixel-label text-[10px] text-arcade-neon-pink mt-4">"Spring Collection"</p>
+</div>
+<div class="absolute bottom-0 w-full h-1 bg-arcade-neon-cyan animate-pulse"></div>
+</div>
+</div>
+<div class="w-full md:w-7/12 space-y-6">
+<div>
+<span class="inline-block px-3 py-1 bg-arcade-neon-pink/20 text-arcade-neon-pink border border-arcade-neon-pink pixel-label text-[8px] mb-4">CAMPAIGN SPOTLIGHT</span>
+<h2 class="text-3xl font-black text-arcade-text-main mb-6 uppercase tracking-tighter italic">Spring Renewal Campaign</h2>
+<p class="text-arcade-text-main leading-relaxed text-sm opacity-80">
+                            Our Spring Renewal campaign outperformed all benchmarks, driving significant engagement across both platforms. The visual aesthetic resonated strongly with our core demographic.
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-arcade-bg/50 border border-arcade-border p-4 text-center">
+<span class="block lcd-value text-3xl mb-1">12.5k</span>
+<span class="pixel-label text-[8px] text-arcade-neon-cyan opacity-80">IMPRESSIONS</span>
+</div>
+<div class="bg-arcade-bg/50 border border-arcade-border p-4 text-center">
+<span class="block lcd-value text-3xl mb-1 text-arcade-neon-pink">8.4%</span>
+<span class="pixel-label text-[8px] text-arcade-neon-pink opacity-80">CLICK RATE</span>
+</div>
+</div>
+<button class="flex items-center gap-4 text-arcade-neon-yellow pixel-label text-[10px] hover:translate-x-2 transition-transform uppercase">
+                        View Full Analysis <span class="material-symbols-outlined">double_arrow</span>
+</button>
+</div>
+</div>
+</div>
+<section class="bg-arcade-card/80 border-2 border-dashed border-arcade-border p-8">
+<h3 class="text-xl font-black text-arcade-neon-cyan mb-8 flex items-center gap-3 uppercase italic tracking-widest">
+<span class="material-symbols-outlined text-arcade-neon-yellow">lightbulb</span> 
+                Key Takeaways
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-5 bg-arcade-bg border border-arcade-border">
+<strong class="pixel-label text-[9px] block text-arcade-neon-pink mb-4">01. ENGAGEMENT SPIKE</strong>
+<p class="text-xs text-arcade-text-main/70 leading-relaxed font-bold">
+                        Achieved a standout 14.38% engagement rate, significantly outperforming the industry median and proving high content resonance.
+                    </p>
+</div>
+<div class="p-5 bg-arcade-bg border border-arcade-border">
+<strong class="pixel-label text-[9px] block text-arcade-neon-cyan mb-4">02. GROWTH VECTOR</strong>
+<p class="text-xs text-arcade-text-main/70 leading-relaxed font-bold">
+                        Successfully expanded the community with 137 net new followers, demonstrating a high conversion rate from "reached accounts".
+                    </p>
+</div>
+<div class="p-5 bg-arcade-bg border border-arcade-border">
+<strong class="pixel-label text-[9px] block text-arcade-neon-yellow mb-4">03. NEXT STEPS</strong>
+<p class="text-xs text-arcade-text-main/70 leading-relaxed font-bold">
+                        Focus on increasing video retention beyond the 3-second mark to boost algorithmic reach for the upcoming summer collection.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<footer class="text-center p-12 text-arcade-text-main opacity-30 pixel-label text-[8px] mt-8">
+        SOCIAL MEDIA REPORT DASHBOARD [REV. 2026.0]
+    </footer>
+
+</body></html>

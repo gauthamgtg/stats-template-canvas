@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Social Media Report Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2563EB", // Royal Blue
+                        secondary: "#F97316", // Orange
+                        tertiary: "#10B981", // Emerald Green
+                        "background-light": "#F3F4F6", // Gray 100
+                        "background-dark": "#111827", // Gray 900
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1F2937",
+                        "text-primary-light": "#111827",
+                        "text-primary-dark": "#F9FAFB",
+                        "text-secondary-light": "#6B7280",
+                        "text-secondary-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem", // Rounded-2xl
+                    },
+                },
+            },
+        };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-pattern {
+            background-color: #2563eb;
+            background-image: linear-gradient(135deg, #1d4ed8 25%, transparent 25%), linear-gradient(225deg, #1d4ed8 25%, transparent 25%), linear-gradient(45deg, #1d4ed8 25%, transparent 25%), linear-gradient(315deg, #1d4ed8 25%, transparent 25%);
+            background-position:  10px 0, 10px 0, 0 0, 0 0;
+            background-size: 20px 20px;
+            background-repeat: repeat;
+        }
+        .dark .bg-pattern {
+             background-color: #111827;
+             background-image: linear-gradient(135deg, #1f2937 25%, transparent 25%), linear-gradient(225deg, #1f2937 25%, transparent 25%), linear-gradient(45deg, #1f2937 25%, transparent 25%), linear-gradient(315deg, #1f2937 25%, transparent 25%);
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen p-4 md:p-8 font-body text-text-primary-light dark:text-text-primary-dark">
+<div class="max-w-6xl mx-auto space-y-6">
+<header class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-6 md:p-8 text-center">
+<h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">Social Media Report - 30 Jan '26</h1>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-5 space-y-6">
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-6">
+<h2 class="text-xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">Facebook</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Total Impression</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">1,905</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Total Engagement</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">274</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Engagement Rate</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">14%</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">New Followers</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">137</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-6">
+<h2 class="text-xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">Instagram</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Total Impression</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">1,905</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Total Engagement</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">274</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Engagement Rate</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">14%</div>
+</div>
+<div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">New Followers</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">137</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7">
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-8 h-full">
+<h2 class="text-xl font-bold text-center mb-8 text-gray-800 dark:text-gray-100">Reach Performance by Type</h2>
+<div class="grid md:grid-cols-1 gap-12">
+<div>
+<h3 class="text-lg font-bold text-center mb-6 text-gray-700 dark:text-gray-300">FB</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-blue-600"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Feed</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">137</span>
+</div>
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-orange-400"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Reels</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">7,071</span>
+</div>
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Story</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">100</span>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<h3 class="text-lg font-bold text-center mb-6 text-gray-700 dark:text-gray-300">Instagram</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-blue-600"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Story</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">635</span>
+</div>
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-orange-400"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Post</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">5145</span>
+</div>
+<div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+<div class="flex items-center space-x-3">
+<span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+<span class="font-medium text-gray-700 dark:text-gray-300">Reels</span>
+</div>
+<span class="font-bold text-gray-900 dark:text-white">436</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-8">
+<h2 class="text-xl font-bold text-center mb-8 text-gray-800 dark:text-gray-100">Demographic Stats</h2>
+<div class="space-y-6">
+<div class="flex flex-col md:flex-row items-center gap-4">
+<div class="flex-1 w-full flex items-center bg-gray-100 dark:bg-gray-700 rounded-full h-10 overflow-hidden relative">
+<div class="absolute left-4 z-10 font-bold text-sm text-gray-800 dark:text-gray-200">Facebook: Male</div>
+<div class="bg-orange-400 h-full rounded-full" style="width: 64%;"></div>
+</div>
+<div class="text-3xl font-bold text-gray-900 dark:text-white w-20 text-center">64%</div>
+<div class="flex-1 w-full flex items-center bg-gray-100 dark:bg-gray-700 rounded-full h-10 overflow-hidden relative">
+<div class="absolute left-4 z-10 font-bold text-sm text-gray-800 dark:text-gray-200">Facebook: Female</div>
+<div class="bg-emerald-500 h-full rounded-full" style="width: 36%;"></div>
+</div>
+<div class="text-3xl font-bold text-gray-900 dark:text-white w-20 text-center">36%</div>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-4">
+<div class="flex-1 w-full flex items-center bg-gray-100 dark:bg-gray-700 rounded-full h-10 overflow-hidden relative">
+<div class="absolute left-4 z-10 font-bold text-sm text-gray-800 dark:text-gray-200">Instagram: Male</div>
+<div class="bg-orange-400 h-full rounded-full" style="width: 70%;"></div>
+</div>
+<div class="text-3xl font-bold text-gray-900 dark:text-white w-20 text-center">70%</div>
+<div class="flex-1 w-full flex items-center bg-gray-100 dark:bg-gray-700 rounded-full h-10 overflow-hidden relative">
+<div class="absolute left-4 z-10 font-bold text-sm text-gray-800 dark:text-gray-200">Instagram: Female</div>
+<div class="bg-emerald-500 h-full rounded-full" style="width: 30%;"></div>
+</div>
+<div class="text-3xl font-bold text-gray-900 dark:text-white w-20 text-center">30%</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-8">
+<div class="grid md:grid-cols-2 gap-8 md:divide-x dark:divide-gray-700">
+<div>
+<h2 class="text-lg font-bold text-center mb-6 text-gray-800 dark:text-gray-100">Facebook</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Shares</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">1,905</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Views</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">274</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Profile Visits</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">14%</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Link Clicks</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">137</div>
+</div>
+</div>
+</div>
+<div>
+<h2 class="text-lg font-bold text-center mb-6 text-gray-800 dark:text-gray-100">Instagram</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Shares</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">1,905</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Views</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">274</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Profile Visits</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">14%</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-200 dark:border-gray-600 shadow-sm">
+<div class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1">Link Clicks</div>
+<div class="text-2xl font-bold text-gray-900 dark:text-white">137</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-8">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-gray-100">Top Performing Content</h2>
+<div class="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
+<div class="w-full lg:w-3/5 rounded-2xl overflow-hidden shadow-md">
+<img alt="Spooky halloween promotional graphic with a ghost holding a money bag and gold coins" class="w-full h-auto object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZH75_8RQjfvOOvrR453WuVjURToZVbgsAAcQSi_tcXNf1CTJuTfEhIadaqZKYItUyWtVgNAZuoZTis5lT8_9VyDoEWvd9QCX1PVPVW8rzScK5ncPlP_VOdonbRHL__ylM9jAJUqlEvOX7qizAygitJGFtY-sXBVDRknFPzVTLJgAUWWJYq7zdEiDJQTyYJyiZ0iEgt_ndtoH0jUOspVSy66ftViqnBlIAeijdX_cx29qPLhtWME605YiVy94oAvdK_19TToGlyw"/>
+<div class="bg-[#2a0e4b] text-white text-xs p-2 text-center">
+                        No purchase necessary. Must be 18+ (21+ where required). Play responsibly
+                    </div>
+</div>
+<div class="w-full lg:w-2/5 flex flex-col gap-4">
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm h-full min-h-[100px]">
+<span class="text-sm text-gray-500 dark:text-gray-400 font-medium">Views</span>
+<span class="text-3xl font-bold text-gray-900 dark:text-white">478</span>
+</div>
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm h-full min-h-[100px]">
+<span class="text-sm text-gray-500 dark:text-gray-400 font-medium">Reach</span>
+<span class="text-3xl font-bold text-gray-900 dark:text-white">270</span>
+</div>
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm h-full min-h-[100px]">
+<span class="text-sm text-gray-500 dark:text-gray-400 font-medium">Interactions</span>
+<span class="text-3xl font-bold text-gray-900 dark:text-white">35</span>
+</div>
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm h-full min-h-[100px]">
+<span class="text-sm text-gray-500 dark:text-gray-400 font-medium">Comments</span>
+<span class="text-3xl font-bold text-gray-900 dark:text-white">26</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl shadow-lg p-8">
+<h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Summary:</h2>
+<ul class="space-y-4 text-gray-700 dark:text-gray-300 list-disc pl-5 leading-relaxed">
+<li>
+<strong class="text-gray-900 dark:text-white">Exceptional Engagement:</strong> Achieved a standout 14.38% engagement rate, significantly outperforming the 2026 industry median (~0.15%) and proving high content resonance.
+                </li>
+<li>
+<strong class="text-gray-900 dark:text-white">Accelerated Growth:</strong> Successfully expanded the community with 137 net new followers, demonstrating a high conversion rate from "reached accounts" to "loyal followers."
+                </li>
+<li>
+<strong class="text-gray-900 dark:text-white">High-Impact Visibility:</strong> Generated 5,145 impressions and reached 3,389 unique accounts, with static posts and the "Don't Ghost" creative serving as the primary drivers.
+                </li>
+<li>
+<strong class="text-gray-900 dark:text-white">Strategic Optimization:</strong> While initial hooks are strong, the key growth lever for next month is increasing video retention beyond the 3-second mark to boost algorithmic reach.
+                </li>
+<li>
+                     Would you like me to generate a specific "Content Theme" for next month based on these successful results?
+                </li>
+</ul>
+</div>
+</div>
+
+</body></html>

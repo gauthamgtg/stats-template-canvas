@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Social Metrics Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: "#020412", // Deepest navy
+                            800: "#0a1128", // Deep navy
+                            700: "#132046", // Card bg
+                        },
+                        neon: {
+                            blue: "#00f0ff",
+                            lime: "#ccff00",
+                            pink: "#ff0099",
+                        },
+                    },
+                    fontFamily: {
+                        display: ["Space Grotesk", "sans-serif"],
+                        sans: ["Space Grotesk", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 10px rgba(0, 240, 255, 0.3), 0 0 20px rgba(0, 240, 255, 0.1)',
+                        'neon-lime': '0 0 10px rgba(204, 255, 0, 0.3), 0 0 20px rgba(204, 255, 0, 0.1)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                    }
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-navy-800/40 backdrop-blur-xl border border-white/5 shadow-glass;
+            }
+            .text-glow {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            }
+            .text-glow-blue {
+                text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            }
+            .text-glow-lime {
+                text-shadow: 0 0 8px rgba(204, 255, 0, 0.5);
+            }
+        }
+        body {
+            background-color: #020412;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(204, 255, 0, 0.05) 0%, transparent 25%);
+        }@keyframes fill-gauge-1 {
+            from { stroke-dasharray: 0, 100; }
+            to { stroke-dasharray: 75, 100; }
+        }
+        @keyframes fill-gauge-2 {
+            from { stroke-dasharray: 0, 100; }
+            to { stroke-dasharray: 60, 100; }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 text-white font-sans antialiased selection:bg-neon-blue selection:text-navy-900">
+<main class="max-w-6xl mx-auto space-y-8">
+<header class="flex flex-col md:flex-row justify-between items-end md:items-center border-b border-white/10 pb-6">
+<div>
+<h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-2 text-glow">
+                SOCIAL <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-blue-500">METRICS</span>
+</h1>
+<p class="text-gray-400 font-light tracking-widest uppercase text-sm">Q1 2026 Performance Report</p>
+</div>
+<div class="flex items-center gap-4 mt-4 md:mt-0">
+<div class="px-4 py-2 rounded-full border border-neon-lime/30 bg-neon-lime/5 text-neon-lime text-xs font-bold uppercase tracking-wider shadow-neon-lime">
+                Status: Growing
+            </div>
+<div class="text-right">
+<p class="text-xs text-gray-500 uppercase">Last Updated</p>
+<p class="font-mono text-neon-blue">MAR 31, 23:59</p>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-neon-blue/30 transition-all duration-300">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-neon-blue/10 rounded-full blur-xl group-hover:bg-neon-blue/20 transition-all"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-gray-400 text-xs font-bold uppercase tracking-widest">Total Reach</span>
+<span class="material-symbols-outlined text-neon-blue">public</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-white">8,534</span>
+<span class="text-xs text-neon-lime flex items-center bg-neon-lime/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 12%
+                </span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-white/20 transition-all duration-300">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full blur-xl group-hover:bg-white/10 transition-all"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-gray-400 text-xs font-bold uppercase tracking-widest">Impressions</span>
+<span class="material-symbols-outlined text-white/70">visibility</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-white">12.4k</span>
+<span class="text-xs text-neon-lime flex items-center bg-neon-lime/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 8.5%
+                </span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-neon-pink/30 transition-all duration-300">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-neon-pink/10 rounded-full blur-xl group-hover:bg-neon-pink/20 transition-all"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-gray-400 text-xs font-bold uppercase tracking-widest">Engagement</span>
+<span class="material-symbols-outlined text-neon-pink">favorite</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-white">1,402</span>
+<span class="text-xs text-neon-lime flex items-center bg-neon-lime/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_upward</span> 24%
+                </span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-neon-lime/30 transition-all duration-300">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-neon-lime/10 rounded-full blur-xl group-hover:bg-neon-lime/20 transition-all"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-gray-400 text-xs font-bold uppercase tracking-widest">New Followers</span>
+<span class="material-symbols-outlined text-neon-lime">group_add</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-white">284</span>
+<span class="text-xs text-red-400 flex items-center bg-red-400/10 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[10px] mr-0.5">arrow_downward</span> 2%
+                </span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-8 glass-panel rounded-3xl p-8 border border-white/5 relative">
+<h2 class="text-xl font-bold mb-8 flex items-center gap-3">
+<span class="w-1 h-6 bg-neon-blue rounded-full shadow-neon-blue"></span>
+                Engagement Velocity
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 place-items-center h-full pb-6">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<path class="text-neon-blue drop-shadow-[0_0_10px_rgba(0,240,255,0.8)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="2.5"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="text-3xl font-bold text-white text-glow-blue">75%</span>
+<span class="text-xs text-gray-400 uppercase tracking-widest mt-1">Facebook</span>
+</div>
+</div>
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-white/5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<path class="text-neon-pink drop-shadow-[0_0_10px_rgba(255,0,153,0.8)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="60, 100" stroke-linecap="round" stroke-width="2.5"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="text-3xl font-bold text-white text-glow">60%</span>
+<span class="text-xs text-gray-400 uppercase tracking-widest mt-1">Instagram</span>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-8 mt-4 text-sm text-gray-400">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-neon-blue shadow-neon-blue"></span> Active
+                </div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-white/20"></span> Dormant
+                </div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="glass-panel p-6 rounded-3xl flex-1 flex flex-col justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neon-blue/5"></div>
+<h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6">Demographic Split</h3>
+<div class="space-y-6 relative z-10">
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-white font-medium">Male</span>
+<span class="text-neon-lime font-mono">67%</span>
+</div>
+<div class="h-2 w-full bg-navy-900 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-neon-lime to-green-600 w-[67%] rounded-full shadow-neon-lime"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-white font-medium">Female</span>
+<span class="text-neon-blue font-mono">33%</span>
+</div>
+<div class="h-2 w-full bg-navy-900 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-neon-blue to-indigo-600 w-[33%] rounded-full shadow-neon-blue"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-3xl flex-1 flex flex-col justify-center">
+<h3 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Device Usage</h3>
+<div class="flex items-center justify-between">
+<div class="text-center">
+<span class="material-symbols-outlined text-white/50 text-3xl mb-1">smartphone</span>
+<div class="text-lg font-bold text-white">82%</div>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="text-center">
+<span class="material-symbols-outlined text-white/50 text-3xl mb-1">laptop_mac</span>
+<div class="text-lg font-bold text-white">18%</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="glass-panel rounded-3xl p-1 border-white/10">
+<div class="bg-navy-900/80 rounded-[1.4rem] p-6 h-full flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-neon-lime">star</span>
+                        Top Content
+                    </h2>
+<span class="bg-white/10 text-white/70 px-3 py-1 rounded-full text-xs uppercase tracking-wider">Reels</span>
+</div>
+<div class="flex gap-6 items-center flex-1">
+<div class="w-32 h-44 flex-shrink-0 rounded-xl bg-gradient-to-br from-indigo-900 to-purple-900 relative shadow-[0_0_20px_rgba(0,240,255,0.15)] border border-neon-blue/30 overflow-hidden group">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-4xl">😎</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-2 text-center">
+<span class="text-[10px] text-neon-blue font-bold uppercase">SweepBetz</span>
+</div>
+<div class="absolute inset-0 bg-neon-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="flex-1 space-y-4">
+<div>
+<h3 class="text-lg font-bold text-white leading-tight mb-1">Don't Ghost This Offer!</h3>
+<p class="text-xs text-gray-400 uppercase tracking-widest">Posted Mar 12 • 4:20 PM</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-navy-800 p-3 rounded-lg border border-white/5">
+<div class="text-xs text-gray-500 uppercase">Views</div>
+<div class="text-xl font-bold text-white">478</div>
+</div>
+<div class="bg-navy-800 p-3 rounded-lg border border-white/5">
+<div class="text-xs text-gray-500 uppercase">Likes</div>
+<div class="text-xl font-bold text-white">35</div>
+</div>
+</div>
+<div class="w-full bg-navy-800 rounded-full h-1.5 mt-2">
+<div class="bg-gradient-to-r from-neon-blue to-purple-500 h-1.5 rounded-full w-[85%] shadow-neon-blue"></div>
+</div>
+<div class="text-[10px] text-right text-gray-400">Retention Rate: 85%</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-3xl p-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-9xl text-neon-lime">bolt</span>
+</div>
+<h2 class="text-xl font-bold mb-8 text-white relative z-10">Reach Breakdown</h2>
+<div class="space-y-4 relative z-10">
+<div class="group flex items-center justify-between p-4 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-neon-blue/10 flex items-center justify-center text-neon-blue border border-neon-blue/20 shadow-neon-blue">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<div>
+<div class="font-bold text-white">IG Reels</div>
+<div class="text-xs text-gray-400">Video Content</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-xl font-bold text-neon-blue text-glow-blue">7,071</div>
+<div class="text-[10px] text-gray-500 uppercase">Impressions</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-4 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div>
+<div class="font-bold text-white">IG Posts</div>
+<div class="text-xs text-gray-400">Static Images</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-xl font-bold text-white">5,145</div>
+<div class="text-[10px] text-gray-500 uppercase">Impressions</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-4 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-default">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-neon-lime/10 flex items-center justify-center text-neon-lime border border-neon-lime/20 shadow-neon-lime">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<div class="font-bold text-white">Stories</div>
+<div class="text-xs text-gray-400">Ephemeral</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-xl font-bold text-white">735</div>
+<div class="text-[10px] text-gray-500 uppercase">Impressions</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-12 text-center pb-8 opacity-40 hover:opacity-100 transition-opacity">
+<p class="text-xs text-white uppercase tracking-[0.2em]">Generated by Social Media Report V2</p>
+</footer>
+
+</body></html>

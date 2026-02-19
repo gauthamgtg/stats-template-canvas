@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aesthetic Social Media Report - Arctic High-Contrast</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "brutal-bg": "#FFFFFF",
+                        "brutal-card": "#1A1A1A",
+                        "brutal-accent": "#00D1FF", // Glacial Blue
+                        "brutal-text-main": "#000000",
+                        "brutal-text-card": "#FFFFFF",
+                        "brutal-muted": "#888888",
+                    },
+                    fontFamily: {
+                        sans: ["Space Grotesk", "sans-serif"],
+                        mono: ["Space Mono", "monospace"],
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                        '4': '4px',
+                    }
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        h1, h2, h3, .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .brutal-border {
+            border: 2px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .brutal-border-white {
+            border: 2px solid #FFFFFF;
+        }
+        .thin-progress-bar {
+            height: 8px;
+            background-color: #333333;
+            border: 1px solid #444444;
+        }
+        .thin-progress-fill {
+            height: 100%;
+            transition: width 1s ease-in-out;
+        }
+        .accent-glow {
+            text-shadow: 0 0 10px rgba(0, 209, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-12">
+<main class="max-w-6xl mx-auto space-y-12">
+<header class="text-left space-y-4 mb-16 border-b-4 border-brutal-accent pb-8">
+<span class="uppercase tracking-widest text-sm font-bold text-brutal-accent font-mono">[ REPORT_TYPE: SOCIAL_MEDIA ]</span>
+<h1 class="text-5xl md:text-8xl text-brutal-text-main leading-none uppercase">Quarterly Performance Insights</h1>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-brutal-card p-6 brutal-border text-brutal-text-card">
+<div class="flex items-start justify-between mb-6">
+<div>
+<p class="text-[10px] uppercase font-bold font-mono text-brutal-muted mb-1">Total Reach</p>
+<h3 class="text-4xl stat-value">124.5k</h3>
+</div>
+<span class="material-symbols-outlined text-brutal-text-card text-3xl">public</span>
+</div>
+<div class="flex items-center gap-2 text-xs font-bold font-mono bg-brutal-accent/20 text-brutal-accent py-1 px-2 w-fit">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12.5% vs last month</span>
+</div>
+</div>
+<div class="bg-brutal-card p-6 brutal-border text-brutal-text-card">
+<div class="flex items-start justify-between mb-6">
+<div>
+<p class="text-[10px] uppercase font-bold font-mono text-brutal-muted mb-1">Engagement</p>
+<h3 class="text-4xl stat-value">8.2k</h3>
+</div>
+<span class="material-symbols-outlined text-brutal-text-card text-3xl">favorite</span>
+</div>
+<div class="flex items-center gap-2 text-xs font-bold font-mono bg-brutal-accent/20 text-brutal-accent py-1 px-2 w-fit">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+5.2% vs last month</span>
+</div>
+</div>
+<div class="bg-brutal-card p-6 brutal-border text-brutal-text-card">
+<div class="flex items-start justify-between mb-6">
+<div>
+<p class="text-[10px] uppercase font-bold font-mono text-brutal-muted mb-1">Followers</p>
+<h3 class="text-4xl stat-value">45.9k</h3>
+</div>
+<span class="material-symbols-outlined text-brutal-text-card text-3xl">group_add</span>
+</div>
+<div class="flex items-center gap-2 text-xs font-bold font-mono bg-red-900/40 text-red-400 py-1 px-2 w-fit">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-0.8% vs last month</span>
+</div>
+</div>
+<div class="bg-brutal-card p-6 brutal-border text-brutal-text-card">
+<div class="flex items-start justify-between mb-6">
+<div>
+<p class="text-[10px] uppercase font-bold font-mono text-brutal-muted mb-1">Conversion</p>
+<h3 class="text-4xl stat-value">2.4%</h3>
+</div>
+<span class="material-symbols-outlined text-brutal-text-card text-3xl">ads_click</span>
+</div>
+<div class="flex items-center gap-2 text-xs font-bold font-mono bg-brutal-accent/20 text-brutal-accent py-1 px-2 w-fit">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+1.1% vs last month</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<div class="bg-brutal-card p-8 brutal-border text-brutal-text-card">
+<div class="flex items-center gap-4 mb-10 border-b-2 border-brutal-muted pb-4">
+<span class="material-symbols-outlined text-4xl">photo_camera</span>
+<h2 class="text-3xl font-sans uppercase">Instagram Insights</h2>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Stories Reach</span>
+<span class="text-brutal-accent bg-black/40 px-2">85%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Reels Engagement</span>
+<span class="text-brutal-accent bg-black/40 px-2">62%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 62%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Post Interactions</span>
+<span class="text-brutal-accent bg-black/40 px-2">45%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 45%"></div>
+</div>
+</div>
+</div>
+<div class="mt-12 grid grid-cols-3 gap-2 pt-6 border-t-2 border-brutal-muted">
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">Avg Likes</p>
+<p class="text-xl font-bold font-sans">1,240</p>
+</div>
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">Avg Comments</p>
+<p class="text-xl font-bold font-sans">86</p>
+</div>
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">Saves</p>
+<p class="text-xl font-bold font-sans">320</p>
+</div>
+</div>
+</div>
+<div class="bg-brutal-card p-8 brutal-border text-brutal-text-card">
+<div class="flex items-center gap-4 mb-10 border-b-2 border-brutal-muted pb-4">
+<span class="material-symbols-outlined text-4xl">social_leaderboard</span>
+<h2 class="text-3xl font-sans uppercase">Facebook Insights</h2>
+</div>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Page Views</span>
+<span class="text-brutal-accent bg-black/40 px-2">78%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 78%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Link Clicks</span>
+<span class="text-brutal-accent bg-black/40 px-2">54%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 54%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold font-mono mb-2 uppercase">
+<span>Video Retention</span>
+<span class="text-brutal-accent bg-black/40 px-2">33%</span>
+</div>
+<div class="thin-progress-bar">
+<div class="thin-progress-fill bg-brutal-accent" style="width: 33%"></div>
+</div>
+</div>
+</div>
+<div class="mt-12 grid grid-cols-3 gap-2 pt-6 border-t-2 border-brutal-muted">
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">Shares</p>
+<p class="text-xl font-bold font-sans">450</p>
+</div>
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">Reactions</p>
+<p class="text-xl font-bold font-sans">2.1k</p>
+</div>
+<div class="bg-white/10 p-3 text-white">
+<p class="text-[9px] uppercase font-mono mb-1 text-brutal-muted">CTR</p>
+<p class="text-xl font-bold font-sans">1.8%</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-4 bg-brutal-card p-8 brutal-border text-brutal-text-card">
+<h2 class="text-3xl font-sans uppercase mb-10 border-b-2 border-brutal-muted pb-4">Demographics</h2>
+<div class="space-y-10">
+<div class="flex items-center justify-center relative w-48 h-48 mx-auto border-4 border-black bg-black p-1">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-brutal-accent" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="70, 100" stroke-width="6"></path>
+<path class="text-white/20" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="30, 100" stroke-dashoffset="-70" stroke-width="6"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
+<span class="text-4xl font-sans font-bold">70%</span>
+<span class="text-[10px] font-mono uppercase">Female</span>
+</div>
+</div>
+<div class="space-y-4 font-mono font-bold">
+<div class="flex items-center gap-3 bg-white/10 text-white p-2 border border-white/10">
+<span class="w-4 h-4 bg-brutal-accent"></span>
+<span class="text-xs flex-1">Female Audience</span>
+<span class="text-xs">70%</span>
+</div>
+<div class="flex items-center gap-3 bg-white/5 text-white/50 p-2 border border-white/5">
+<span class="w-4 h-4 bg-white/30"></span>
+<span class="text-xs flex-1">Male Audience</span>
+<span class="text-xs">30%</span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 bg-brutal-card p-8 brutal-border text-brutal-text-card flex flex-col md:flex-row gap-8 items-stretch">
+<div class="w-full md:w-5/12">
+<div class="h-full w-full brutal-border border-4 bg-black flex flex-col items-center justify-center p-8 text-center">
+<span class="material-symbols-outlined text-7xl text-brutal-accent mb-6 accent-glow">auto_awesome</span>
+<h3 class="text-3xl font-sans font-bold text-white uppercase leading-tight mb-2">Top Performer</h3>
+<p class="text-brutal-accent font-mono text-xs uppercase tracking-tighter">"Spring Collection"</p>
+</div>
+</div>
+<div class="w-full md:w-7/12 flex flex-col justify-between">
+<div>
+<span class="inline-block px-4 py-1 bg-white/10 text-brutal-accent text-[10px] font-bold uppercase mb-4 font-mono border border-brutal-accent/20">Campaign Spotlight</span>
+<h2 class="text-4xl font-sans font-bold uppercase mb-6 leading-none">Spring Renewal Campaign</h2>
+<p class="text-brutal-muted font-mono text-sm leading-relaxed mb-8">
+                        Our Spring Renewal campaign outperformed all benchmarks, driving significant engagement across both platforms. The visual aesthetic resonated strongly with our core demographic.
+                    </p>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/5 p-4 text-white border border-white/20">
+<span class="block text-3xl font-sans font-bold">12.5k</span>
+<span class="text-[10px] uppercase font-mono text-brutal-muted">Impressions</span>
+</div>
+<div class="bg-white/5 p-4 text-white border border-white/20">
+<span class="block text-3xl font-sans font-bold">8.4%</span>
+<span class="text-[10px] uppercase font-mono text-brutal-muted">Click Rate</span>
+</div>
+</div>
+<button class="w-full bg-brutal-accent text-black p-4 brutal-border font-bold uppercase font-mono flex items-center justify-center gap-3 hover:bg-white transition-colors">
+                        View Full Analysis <span class="material-symbols-outlined font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<section class="bg-brutal-accent p-8 brutal-border">
+<h3 class="text-3xl font-sans font-bold text-black mb-8 uppercase flex items-center gap-3">
+<span class="material-symbols-outlined text-4xl">lightbulb</span> 
+            Key Takeaways
+        </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-black">
+<div class="p-6 bg-brutal-card brutal-border border-4 text-brutal-text-card">
+<strong class="block text-xl font-sans uppercase mb-4 border-b-2 border-brutal-accent pb-2 text-brutal-accent">Engagement Spike</strong>
+<p class="text-sm">Achieved a standout 14.38% engagement rate, significantly outperforming the industry median and proving high content resonance.</p>
+</div>
+<div class="p-6 bg-brutal-card brutal-border border-4 text-brutal-text-card">
+<strong class="block text-xl font-sans uppercase mb-4 border-b-2 border-brutal-accent pb-2 text-brutal-accent">Growth Vector</strong>
+<p class="text-sm">Successfully expanded the community with 137 net new followers, demonstrating a high conversion rate from "reached accounts".</p>
+</div>
+<div class="p-6 bg-brutal-card brutal-border border-4 text-brutal-text-card">
+<strong class="block text-xl font-sans uppercase mb-4 border-b-2 border-brutal-accent pb-2 text-brutal-accent">Next Steps</strong>
+<p class="text-sm">Focus on increasing video retention beyond the 3-second mark to boost algorithmic reach for the upcoming summer collection.</p>
+</div>
+</div>
+</section>
+</main>
+<footer class="text-center p-12 text-brutal-muted font-mono text-[10px] uppercase tracking-[0.4em]">
+    // System Output: Social Media Report Dashboard © 2026_
+</footer>
+
+</body></html>

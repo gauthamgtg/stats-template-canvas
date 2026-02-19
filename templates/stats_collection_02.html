@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aesthetic Social Media Report V3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracotta: "#bc6c58", 
+                        "terracotta-dark": "#8a4f40",
+                        cream: "#f9f7f2",
+                        beige: "#eaddcf",
+                        "beige-dark": "#d3c0b0",
+                        sand: "#f2efe9",
+                        charcoal: "#2c2826",
+                        "accent-brown": "#5d4037"
+                    },
+                    fontFamily: {
+                        serif: ["Playfair Display", "serif"],
+                        sans: ["Lato", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(44, 40, 38, 0.05)',
+                    }
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            background-color: #f9f7f2;
+            color: #2c2826;
+        }
+        .smooth-chart path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 2s linear forwards;
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-terracotta selection:text-white min-h-screen">
+<main class="max-w-6xl mx-auto p-8 md:p-12 lg:p-20 bg-white shadow-soft my-8 md:my-12">
+<header class="mb-16 border-b border-beige pb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+<div class="max-w-2xl">
+<p class="text-terracotta font-serif italic text-xl mb-2">Q1 2026 Performance Review</p>
+<h1 class="text-5xl md:text-7xl font-serif text-charcoal leading-tight">Social Media <br/><span class="text-terracotta">Insight Report</span></h1>
+</div>
+<div class="text-right">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-sand mb-2">
+<span class="material-symbols-outlined text-terracotta text-3xl">spa</span>
+</div>
+<p class="text-sm uppercase tracking-widest text-gray-500 font-bold">Est. 2024</p>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+<div class="lg:col-span-4 pr-6 border-r border-beige hidden lg:block">
+<h3 class="font-serif text-2xl text-charcoal mb-4">Executive Summary</h3>
+<p class="text-gray-600 leading-relaxed mb-6 font-light">
+                    This quarter showcased exceptional growth in audience engagement across all platforms. The shift towards authentic, aesthetic content has resonated deeply with our core demographic, resulting in higher retention rates and organic reach.
+                </p>
+<div class="flex items-center gap-2 text-terracotta font-bold text-sm tracking-wide uppercase cursor-pointer hover:underline">
+                    Read Full Analysis <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+<div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-sand p-8">
+<div class="flex items-center justify-between mb-8 border-b border-terracotta/20 pb-4">
+<h2 class="font-serif text-2xl text-charcoal">Facebook</h2>
+<span class="material-symbols-outlined text-terracotta">public</span>
+</div>
+<div class="space-y-6">
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">Impressions</span>
+<span class="font-serif text-3xl text-charcoal">1,905</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">Engagement</span>
+<span class="font-serif text-3xl text-charcoal">274</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">New Followers</span>
+<span class="font-serif text-3xl text-charcoal">137</span>
+</div>
+<div class="pt-4 mt-2">
+<div class="w-full bg-white h-1">
+<div class="bg-terracotta h-1" style="width: 65%"></div>
+</div>
+<p class="text-right text-xs text-terracotta mt-2 font-bold">+14% Growth</p>
+</div>
+</div>
+</div>
+<div class="bg-beige/30 p-8">
+<div class="flex items-center justify-between mb-8 border-b border-terracotta/20 pb-4">
+<h2 class="font-serif text-2xl text-charcoal">Instagram</h2>
+<span class="material-symbols-outlined text-terracotta">camera_alt</span>
+</div>
+<div class="space-y-6">
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">Impressions</span>
+<span class="font-serif text-3xl text-charcoal">5,145</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">Engagement</span>
+<span class="font-serif text-3xl text-charcoal">892</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-xs uppercase tracking-widest text-gray-500">New Followers</span>
+<span class="font-serif text-3xl text-charcoal">412</span>
+</div>
+<div class="pt-4 mt-2">
+<div class="w-full bg-white h-1">
+<div class="bg-terracotta h-1" style="width: 82%"></div>
+</div>
+<p class="text-right text-xs text-terracotta mt-2 font-bold">+28% Growth</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section class="mb-20">
+<div class="flex flex-col md:flex-row justify-between items-end mb-8 border-b border-beige pb-4">
+<div>
+<h2 class="font-serif text-4xl text-charcoal mb-2">Audience Growth</h2>
+<p class="text-gray-500 font-light text-sm tracking-wide">NET FOLLOWER ACQUISITION OVER TIME</p>
+</div>
+<div class="flex gap-4 mt-4 md:mt-0">
+<span class="flex items-center text-xs uppercase tracking-widest gap-2 text-gray-600"><span class="w-2 h-2 rounded-full bg-terracotta"></span> Facebook</span>
+<span class="flex items-center text-xs uppercase tracking-widest gap-2 text-gray-600"><span class="w-2 h-2 rounded-full bg-beige-dark"></span> Instagram</span>
+</div>
+</div>
+<div class="relative h-64 w-full bg-white border-l border-b border-gray-100 p-4">
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none p-4 pl-0 pb-0">
+<div class="border-t border-gray-50 w-full h-0"></div>
+<div class="border-t border-gray-50 w-full h-0"></div>
+<div class="border-t border-gray-50 w-full h-0"></div>
+<div class="border-t border-gray-50 w-full h-0"></div>
+</div>
+<svg class="w-full h-full overflow-visible smooth-chart" viewBox="0 0 1000 300">
+<defs>
+<linearGradient id="gradientInsta" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#d3c0b0;stop-opacity:0.4"></stop>
+<stop offset="100%" style="stop-color:#d3c0b0;stop-opacity:0"></stop>
+</linearGradient>
+<linearGradient id="gradientFb" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#bc6c58;stop-opacity:0.4"></stop>
+<stop offset="100%" style="stop-color:#bc6c58;stop-opacity:0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,250 C150,240 250,150 400,180 C550,210 650,100 800,120 C900,130 950,50 1000,80 V300 H0 Z" fill="url(#gradientInsta)" stroke="none"></path>
+<path d="M0,250 C150,240 250,150 400,180 C550,210 650,100 800,120 C900,130 950,50 1000,80" fill="none" stroke="#d3c0b0" stroke-width="3"></path>
+<path d="M0,280 C150,270 300,200 450,220 C600,240 700,150 850,160 C920,165 980,100 1000,120 V300 H0 Z" fill="url(#gradientFb)" stroke="none"></path>
+<path d="M0,280 C150,270 300,200 450,220 C600,240 700,150 850,160 C920,165 980,100 1000,120" fill="none" stroke="#bc6c58" stroke-width="3"></path>
+</svg>
+<div class="absolute -bottom-6 left-0 right-0 flex justify-between text-xs text-gray-400 font-sans px-4">
+<span>JAN 1</span>
+<span>JAN 15</span>
+<span>FEB 1</span>
+<span>FEB 15</span>
+<span>MAR 1</span>
+<span>MAR 15</span>
+<span>APR 1</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20">
+<div class="lg:col-span-2">
+<h2 class="font-serif text-3xl text-charcoal mb-8">Demographic Breakdown</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+<div class="space-y-8">
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-sm font-bold text-charcoal">Female Audience</span>
+<span class="text-sm text-terracotta font-serif italic">Instagram</span>
+</div>
+<div class="w-full bg-sand h-12 flex items-center px-4 relative">
+<div class="absolute left-0 top-0 bottom-0 bg-beige-dark" style="width: 30%;"></div>
+<span class="relative z-10 font-serif text-xl pl-2">30%</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-sm font-bold text-charcoal">Male Audience</span>
+<span class="text-sm text-terracotta font-serif italic">Instagram</span>
+</div>
+<div class="w-full bg-sand h-12 flex items-center px-4 relative">
+<div class="absolute left-0 top-0 bottom-0 bg-terracotta" style="width: 70%;"></div>
+<span class="relative z-10 font-serif text-xl pl-2 text-white">70%</span>
+</div>
+</div>
+</div>
+<div class="bg-sand p-6 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl text-terracotta mb-4">location_on</span>
+<h4 class="font-serif text-xl mb-2">Top Region</h4>
+<p class="text-3xl font-bold text-charcoal mb-1">New York</p>
+<p class="text-xs text-gray-500 uppercase tracking-widest">United States</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1 bg-charcoal text-cream p-8 md:p-10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-terracotta opacity-10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+<h3 class="font-serif text-2xl mb-8 border-b border-gray-600 pb-4">Key Takeaways</h3>
+<ul class="space-y-8">
+<li class="relative pl-6 border-l border-terracotta">
+<h4 class="text-terracotta font-bold text-sm uppercase tracking-wide mb-1">Engagement</h4>
+<p class="font-serif text-lg leading-snug opacity-90">14.38% engagement rate outperforms the industry median significantly.</p>
+</li>
+<li class="relative pl-6 border-l border-gray-600">
+<h4 class="text-gray-400 font-bold text-sm uppercase tracking-wide mb-1">Visibility</h4>
+<p class="font-serif text-lg leading-snug opacity-90">Reached 3,389 unique accounts through static posts and creative visuals.</p>
+</li>
+<li class="relative pl-6 border-l border-gray-600">
+<h4 class="text-gray-400 font-bold text-sm uppercase tracking-wide mb-1">Conversion</h4>
+<p class="font-serif text-lg leading-snug opacity-90">High conversion from reached accounts to loyal followers this month.</p>
+</li>
+</ul>
+<div class="mt-12 pt-6 border-t border-gray-600">
+<p class="font-serif italic text-terracotta text-lg">"Authenticity is the metric that matters most."</p>
+</div>
+</div>
+</div>
+<footer class="mt-20 pt-10 border-t border-beige text-center flex flex-col items-center">
+<div class="mb-6">
+<span class="font-serif text-2xl tracking-tight text-charcoal">Report<span class="text-terracotta">.</span></span>
+</div>
+<p class="text-xs text-gray-400 uppercase tracking-widest font-bold">Confidential Document © 2026</p>
+</footer>
+</main>
+
+</body></html>
