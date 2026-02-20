@@ -866,8 +866,8 @@ function ResizeHandles({ target, onCommit }: { target: HTMLElement | null; onCom
 
   if (!target || !rect || !document.contains(target)) return null;
 
-  const isEdge = (pos: (typeof HANDLE_POSITIONS)[number]) =>
-    pos.id === "n" || pos.id === "e" || pos.id === "s" || pos.id === "w";
+  const isEdge = (id: string) =>
+    id === "n" || id === "e" || id === "s" || id === "w";
 
   return (
     <div
@@ -888,7 +888,7 @@ function ResizeHandles({ target, onCommit }: { target: HTMLElement | null; onCom
         style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
       />
       {HANDLE_POSITIONS.map(({ id, x, y, cursor }) => {
-        const edge = isEdge({ id, x, y, cursor });
+        const edge = isEdge(id);
         const isVerticalEdge = id === "n" || id === "s";
         const w = edge ? (isVerticalEdge ? HANDLE_SIZE_EDGE_W : HANDLE_SIZE_EDGE_H) : HANDLE_SIZE_CORNER;
         const h = edge ? (isVerticalEdge ? HANDLE_SIZE_EDGE_H : HANDLE_SIZE_EDGE_W) : HANDLE_SIZE_CORNER;
@@ -2219,7 +2219,7 @@ ${currentBody}
       const savedRange = textToolbarRangeRef.current;
 
       if (!sel || !sel.rangeCount) {
-        if (focusInToolbar && savedRange && document.contains(savedRange.startContainer)) {
+        if (sel && focusInToolbar && savedRange && document.contains(savedRange.startContainer)) {
           try {
             sel.removeAllRanges();
             sel.addRange(savedRange);
