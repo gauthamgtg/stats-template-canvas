@@ -268,6 +268,31 @@ a {
   user-select: text;
 }
 
+/* Disable card hover animation in edit mode so editing is easier */
+.canvas-edit .template-body .transition-transform:hover {
+  transform: none !important;
+}
+
+/* Resize handles: purple outline, white handles with grey border (Canva-style) */
+.resize-handles-outline-border {
+  border: 2px solid #6366f1;
+  border-radius: 4px;
+}
+
+.resize-handle-circle {
+  background-color: #fff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.resize-handle-oval {
+  background-color: #fff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
 .editor-btn {
   border: 1px solid var(--app-border);
   background: white;
@@ -385,6 +410,12 @@ a {
 .element-selected {
   outline: 2px solid var(--app-accent) !important;
   outline-offset: 2px;
+}
+
+.text-placeholder-multi-selected {
+  outline: 2px solid #6366f1 !important;
+  outline-offset: 1px;
+  border-radius: 4px;
 }
 
 .element-toolbar {
@@ -523,6 +554,36 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.editor-project-name-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.editor-project-name-label {
+  font-size: 0.75rem;
+  color: var(--app-text-muted);
+  white-space: nowrap;
+}
+
+.editor-project-name-input {
+  width: 140px;
+  max-width: 180px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid var(--app-border);
+  border-radius: 6px;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.editor-project-name-input:focus {
+  outline: none;
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 /* ---- Editor: zoom controls (F2) ---- */

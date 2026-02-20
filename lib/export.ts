@@ -9,7 +9,7 @@ export type ExportOptions = {
 const DEFAULT_OPTIONS: Required<ExportOptions> = {
   scale: 2,
   background: "auto",
-  jpegQuality: 0.95,
+  jpegQuality: 1,
 };
 
 type ExportTarget = HTMLElement;

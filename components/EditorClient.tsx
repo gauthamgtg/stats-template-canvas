@@ -391,25 +391,55 @@ const FONT_SIZE_MIN = 10;
 const FONT_SIZE_MAX = 72;
 const FONT_SIZE_STEP = 2;
 
+export type SelectionFormat = {
+  fontSize: number;
+  fontFamily: string;
+  color: string;
+};
+
+function parseRgbOrHex(cssColor: string): string {
+  if (!cssColor || cssColor.startsWith("#")) return cssColor || "#000000";
+  const m = cssColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (!m) return "#000000";
+  const hex = [Number(m[1]), Number(m[2]), Number(m[3])]
+    .map((n) => n.toString(16).padStart(2, "0"))
+    .join("");
+  return `#${hex}`;
+}
+
 function TextToolbar({
   position,
   onFormat,
-  fontFamily,
+  initialFormat,
   onFontFamilyChange,
   fonts,
 }: {
   position: { x: number; y: number };
   onFormat: (cmd: string, value?: string) => void;
-  fontFamily: string;
+  initialFormat: SelectionFormat | null;
   onFontFamilyChange: (font: string) => void;
   fonts: string[];
 }) {
-  const [fontSize, setFontSize] = useState(16);
+  const defaultFormat: SelectionFormat = {
+    fontSize: 16,
+    fontFamily: "Default",
+    color: "#000000",
+  };
+  const format = initialFormat ?? defaultFormat;
+  const [fontSize, setFontSize] = useState(format.fontSize);
+  const [fontFamily, setFontFamily] = useState(format.fontFamily);
+  const [color, setColor] = useState(format.color);
   const [fontDropdownOpen, setFontDropdownOpen] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [caseMenuOpen, setCaseMenuOpen] = useState(false);
   const [alignMenuOpen, setAlignMenuOpen] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setFontSize(format.fontSize);
+    setFontFamily(format.fontFamily);
+    setColor(format.color);
+  }, [format.fontSize, format.fontFamily, format.color]);
 
   const bold = typeof document !== "undefined" && document.queryCommandState?.("bold");
   const italic = typeof document !== "undefined" && document.queryCommandState?.("italic");
@@ -444,6 +474,12 @@ function TextToolbar({
       ref={toolbarRef}
       className="text-toolbar-wrap text-toolbar-wrap--light"
       style={{ left: position.x, top: position.y }}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      role="toolbar"
+      aria-label="Text formatting"
     >
       <div className="text-toolbar text-toolbar--light">
         {/* Font family dropdown */}
@@ -456,7 +492,7 @@ function TextToolbar({
             aria-label="Font family"
             aria-expanded={fontDropdownOpen}
           >
-            {fontFamily}
+            {fontFamily || "Default"}
           </button>
           {fontDropdownOpen && (
             <div className="text-toolbar-dropdown">
@@ -467,6 +503,7 @@ function TextToolbar({
                   className="text-toolbar-dropdown-item"
                   onMouseDown={(e) => {
                     e.preventDefault();
+                    setFontFamily(f);
                     onFontFamilyChange(f);
                     setFontDropdownOpen(false);
                   }}
@@ -520,10 +557,12 @@ function TextToolbar({
             <div className="text-toolbar-color-panel">
               <input
                 type="color"
-                defaultValue="#000000"
+                value={color}
                 onMouseDown={(e) => e.stopPropagation()}
                 onChange={(e) => {
-                  onFormat("foreColor", e.target.value);
+                  const v = e.target.value;
+                  setColor(v);
+                  onFormat("foreColor", v);
                   setColorPickerOpen(false);
                 }}
                 className="text-toolbar-color-input"
@@ -537,6 +576,7 @@ function TextToolbar({
                   style={{ background: hex }}
                   onMouseDown={(e) => {
                     e.preventDefault();
+                    setColor(hex);
                     onFormat("foreColor", hex);
                     setColorPickerOpen(false);
                   }}
@@ -700,6 +740,173 @@ function ElementToolbar({
 }
 
 /* ------------------------------------------------------------------ */
+/*  Resize handles for text placeholder (8 points: corners + edges)   */
+/* ------------------------------------------------------------------ */
+
+const HANDLE_POSITIONS = [
+  { id: "nw", x: 0, y: 0, cursor: "nwse-resize" },
+  { id: "n", x: 0.5, y: 0, cursor: "ns-resize" },
+  { id: "ne", x: 1, y: 0, cursor: "nesw-resize" },
+  { id: "e", x: 1, y: 0.5, cursor: "ew-resize" },
+  { id: "se", x: 1, y: 1, cursor: "nwse-resize" },
+  { id: "s", x: 0.5, y: 1, cursor: "ns-resize" },
+  { id: "sw", x: 0, y: 1, cursor: "nesw-resize" },
+  { id: "w", x: 0, y: 0.5, cursor: "ew-resize" },
+] as const;
+
+const HANDLE_SIZE_CORNER = 10;
+const HANDLE_SIZE_EDGE_W = 12;
+const HANDLE_SIZE_EDGE_H = 8;
+
+function ResizeHandles({ target, onCommit }: { target: HTMLElement | null; onCommit: () => void }) {
+  const [rect, setRect] = useState<DOMRect | null>(null);
+  const resizingRef = useRef<{
+    handle: string;
+    startX: number;
+    startY: number;
+    startW: number;
+    startH: number;
+    startLeft: number;
+    startTop: number;
+    startTransform: string;
+  } | null>(null);
+
+  useLayoutEffect(() => {
+    if (!target) return;
+    const update = () => {
+      if (!target || !document.contains(target)) return;
+      if (resizingRef.current) return;
+      setRect(target.getBoundingClientRect());
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(target);
+    const raf = requestAnimationFrame(update);
+    return () => {
+      ro.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [target]);
+
+  const runResize = useCallback(
+    (clientX: number, clientY: number) => {
+      const r = resizingRef.current;
+      if (!r || !target) return;
+      const el = target;
+      const dx = clientX - r.startX;
+      const dy = clientY - r.startY;
+      let w = r.startW;
+      let h = r.startH;
+      let tx = 0;
+      let ty = 0;
+      const hh = r.handle;
+      if (hh === "e" || hh === "ne" || hh === "se") w = Math.max(20, r.startW + dx);
+      if (hh === "w" || hh === "nw" || hh === "sw") {
+        w = Math.max(20, r.startW - dx);
+        tx = dx;
+      }
+      if (hh === "s" || hh === "se" || hh === "sw") h = Math.max(14, r.startH + dy);
+      if (hh === "n" || hh === "nw" || hh === "ne") {
+        h = Math.max(14, r.startH - dy);
+        ty = dy;
+      }
+      el.style.display = "inline-block";
+      el.style.width = `${w}px`;
+      el.style.height = `${h}px`;
+      el.style.transform = `translate(${tx}px, ${ty}px)`;
+      setRect(el.getBoundingClientRect());
+    },
+    [target]
+  );
+
+  const onHandlePointerDown = useCallback(
+    (e: React.PointerEvent, id: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!target) return;
+      const r = target.getBoundingClientRect();
+      const style = getComputedStyle(target);
+      const currentW = parseFloat(style.width) || r.width;
+      const currentH = parseFloat(style.height) || r.height;
+      resizingRef.current = {
+        handle: id,
+        startX: e.clientX,
+        startY: e.clientY,
+        startW: currentW,
+        startH: currentH,
+        startLeft: r.left,
+        startTop: r.top,
+        startTransform: (target as HTMLElement).style.transform || "",
+      };
+      const onMove = (e2: PointerEvent) => {
+        runResize(e2.clientX, e2.clientY);
+      };
+      const onUp = () => {
+        resizingRef.current = null;
+        onCommit();
+        document.removeEventListener("pointermove", onMove);
+        document.removeEventListener("pointerup", onUp);
+      };
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      document.addEventListener("pointermove", onMove);
+      document.addEventListener("pointerup", onUp, { once: true });
+    },
+    [target, runResize, onCommit]
+  );
+
+  if (!target || !rect || !document.contains(target)) return null;
+
+  const isEdge = (pos: (typeof HANDLE_POSITIONS)[number]) =>
+    pos.id === "n" || pos.id === "e" || pos.id === "s" || pos.id === "w";
+
+  return (
+    <div
+      className="resize-handles-outline"
+      style={{
+        position: "fixed",
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        pointerEvents: "none",
+        boxSizing: "border-box",
+      }}
+      aria-hidden
+    >
+      <div
+        className="resize-handles-outline-border"
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+      />
+      {HANDLE_POSITIONS.map(({ id, x, y, cursor }) => {
+        const edge = isEdge({ id, x, y, cursor });
+        const isVerticalEdge = id === "n" || id === "s";
+        const w = edge ? (isVerticalEdge ? HANDLE_SIZE_EDGE_W : HANDLE_SIZE_EDGE_H) : HANDLE_SIZE_CORNER;
+        const h = edge ? (isVerticalEdge ? HANDLE_SIZE_EDGE_H : HANDLE_SIZE_EDGE_W) : HANDLE_SIZE_CORNER;
+        return (
+          <div
+            key={id}
+            className={`resize-handle ${edge ? "resize-handle-oval" : "resize-handle-circle"}`}
+            data-handle={id}
+            style={{
+              position: "absolute",
+              left: x === 0 ? 0 : x === 1 ? rect.width - w : (rect.width - w) / 2,
+              top: y === 0 ? 0 : y === 1 ? rect.height - h : (rect.height - h) / 2,
+              width: w,
+              height: h,
+              marginLeft: x === 0.5 ? -w / 2 : 0,
+              marginTop: y === 0.5 ? -h / 2 : 0,
+              cursor,
+              pointerEvents: "auto",
+            }}
+            onPointerDown={(e) => onHandlePointerDown(e, id)}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Export Settings Dialog                                              */
 /* ------------------------------------------------------------------ */
 
@@ -749,12 +956,12 @@ function ExportSettingsDialog({
             type="range"
             min={50}
             max={100}
-            value={(options.jpegQuality ?? 0.95) * 100}
+            value={(options.jpegQuality ?? 1) * 100}
             onChange={(e) =>
               onChange({ ...options, jpegQuality: Number(e.target.value) / 100 })
             }
           />
-          <span>{Math.round((options.jpegQuality ?? 0.95) * 100)}%</span>
+          <span>{Math.round((options.jpegQuality ?? 1) * 100)}%</span>
         </label>
         <button type="button" className="editor-btn" onClick={onClose}>
           Done
@@ -804,8 +1011,11 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
   /* --- Save as copy / Load copy ------------------------------------ */
   const [copyKeysVersion, setCopyKeysVersion] = useState(0);
 
+  /* --- Project name (export filename) ----------------------------- */
+  const [projectName, setProjectName] = useState(template.name);
+
   /* --- F9: Export settings ---------------------------------------- */
-  const [exportOpts, setExportOpts] = useState<ExportOptions>({ scale: 2, background: "auto", jpegQuality: 0.95 });
+  const [exportOpts, setExportOpts] = useState<ExportOptions>({ scale: 2, background: "auto", jpegQuality: 1 });
   const [showExportSettings, setShowExportSettings] = useState(false);
 
   /* --- F10: Responsive preview ------------------------------------ */
@@ -813,7 +1023,14 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
 
   /* --- F11: Text toolbar ------------------------------------------ */
   const [textToolbar, setTextToolbar] = useState<{ x: number; y: number } | null>(null);
+  const [selectionFormat, setSelectionFormat] = useState<SelectionFormat | null>(null);
+  const [resizeTarget, setResizeTarget] = useState<HTMLElement | null>(null);
   const textToolbarRangeRef = useRef<Range | null>(null);
+  const multiSelectedEditablesRef = useRef<Set<HTMLElement>>(new Set());
+
+  /* --- Marquee selection (drag to select like Canva) ----------------- */
+  const [marquee, setMarquee] = useState<{ startX: number; startY: number; endX: number; endY: number } | null>(null);
+  const marqueeRectRef = useRef<{ startX: number; startY: number; endX: number; endY: number } | null>(null);
 
   /* --- F12: Background override ----------------------------------- */
   const [bgOverride, setBgOverride] = useState("");
@@ -925,11 +1142,11 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
 
   const baseName = useMemo(
     () =>
-      template.name
+      (projectName || template.name)
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "") || "template",
-    [template.name]
+    [projectName, template.name]
   );
 
   const onExport = useCallback(
@@ -951,6 +1168,40 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     },
     [baseName, exportOpts]
   );
+
+  const saveAsNewTemplate = useCallback(() => {
+    const body = bodyRef.current;
+    const currentBody = body?.innerHTML ?? bodyHTML;
+    const styleType = parsed.hasTailwindStyle ? "text/tailwindcss" : "text/css";
+    let stylesWithColors = parsed.styles;
+    for (const [varName, value] of Object.entries(colorValues)) {
+      const re = new RegExp(`(${varName}\\s*:\\s*)(#[0-9a-fA-F]{3,8}|[^;]+)(;)`, "g");
+      stylesWithColors = stylesWithColors.replace(re, `$1${value}$3`);
+    }
+    const linkTags = parsed.links
+      .map((href) => `<link rel="stylesheet" href="${href.replace(/"/g, "&quot;")}" />`)
+      .join("\n");
+    const title = (projectName || template.name).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>${title}</title>
+${linkTags}
+<style type="${styleType}">${stylesWithColors}</style>
+</head>
+<body class="${(parsed.bodyClass || "min-h-screen p-6 md:p-12").replace(/"/g, "&quot;")}">
+${currentBody}
+</body></html>`;
+    const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${baseName}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setToast("Saved as new template");
+  }, [bodyHTML, colorValues, parsed, projectName, template.name, baseName]);
 
   /* ---------------------------------------------------------------- */
   /*  F1: Font change handler                                          */
@@ -1051,6 +1302,26 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
   /*  F11: Text formatting                                             */
   /* ---------------------------------------------------------------- */
 
+  const getFormatFromSelection = useCallback(() => {
+    const sel = document.getSelection();
+    const savedRange = textToolbarRangeRef.current;
+    const range = (sel?.rangeCount ? sel.getRangeAt(0) : savedRange) ?? null;
+    if (!range) return null;
+    const node = range.startContainer;
+    const el: HTMLElement | null =
+      node.nodeType === Node.TEXT_NODE ? (node.parentElement as HTMLElement) : (node as HTMLElement);
+    if (!el || typeof getComputedStyle === "undefined" || !document.contains(el)) return null;
+    const style = getComputedStyle(el);
+    const fontSizeStr = style.fontSize || "";
+    const fontSize = Math.round(parseFloat(fontSizeStr)) || 16;
+    let fontFamily = (style.fontFamily || "Default").trim();
+    const firstComma = fontFamily.indexOf(",");
+    if (firstComma !== -1) fontFamily = fontFamily.slice(0, firstComma).trim().replace(/^["']|["']$/g, "");
+    if (!fontFamily) fontFamily = "Default";
+    const color = parseRgbOrHex(style.color || "#000000");
+    return { fontSize, fontFamily, color };
+  }, []);
+
   const applyToSelection = useCallback(
     (wrap: (range: Range) => void) => {
       const sel = document.getSelection();
@@ -1072,10 +1343,48 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     []
   );
 
+  const applyFormatToRange = useCallback((r: Range, cmd: string, value?: string) => {
+    if (cmd === "fontSize" && value) {
+      const fragment = r.cloneContents();
+      const div = document.createElement("div");
+      div.appendChild(fragment);
+      const span = document.createElement("span");
+      span.style.fontSize = value;
+      span.innerHTML = div.innerHTML;
+      r.deleteContents();
+      r.insertNode(span);
+    } else if (cmd === "fontName" && value) {
+      const fragment = r.cloneContents();
+      const div = document.createElement("div");
+      div.appendChild(fragment);
+      const span = document.createElement("span");
+      span.style.fontFamily = value === "Default" ? "" : `'${value}', sans-serif`;
+      span.innerHTML = div.innerHTML;
+      r.deleteContents();
+      r.insertNode(span);
+    } else if (cmd === "transformCase" && value) {
+      const text = r.toString();
+      const transformed =
+        value === "uppercase"
+          ? text.toUpperCase()
+          : value === "lowercase"
+            ? text.toLowerCase()
+            : text.replace(/\b\w/g, (c) => c.toUpperCase());
+      const textNode = document.createTextNode(transformed);
+      r.deleteContents();
+      r.insertNode(textNode);
+    }
+  }, []);
+
   const onFormat = useCallback(
     (cmd: string, value?: string) => {
-      if (cmd === "fontSize" && value) {
-        applyToSelection((r) => {
+      const body = bodyRef.current;
+      if (body) {
+        pushSnapshot({ bodyHTML: body.innerHTML, colors: { ...colorValues } });
+      }
+      const multiSet = multiSelectedEditablesRef.current;
+      const applyToOneRange = (r: Range) => {
+        if (cmd === "fontSize" && value) {
           const fragment = r.cloneContents();
           const div = document.createElement("div");
           div.appendChild(fragment);
@@ -1084,13 +1393,11 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
           span.innerHTML = div.innerHTML;
           r.deleteContents();
           r.insertNode(span);
-          r.setStartAfter(span);
-          r.collapse(true);
+          r.setStartBefore(span);
+          r.setEndAfter(span);
           document.getSelection()?.removeAllRanges();
           document.getSelection()?.addRange(r);
-        });
-      } else if (cmd === "fontName" && value) {
-        applyToSelection((r) => {
+        } else if (cmd === "fontName" && value) {
           const fragment = r.cloneContents();
           const div = document.createElement("div");
           div.appendChild(fragment);
@@ -1099,13 +1406,11 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
           span.innerHTML = div.innerHTML;
           r.deleteContents();
           r.insertNode(span);
-          r.setStartAfter(span);
-          r.collapse(true);
+          r.setStartBefore(span);
+          r.setEndAfter(span);
           document.getSelection()?.removeAllRanges();
           document.getSelection()?.addRange(r);
-        });
-      } else if (cmd === "transformCase" && value) {
-        applyToSelection((r) => {
+        } else if (cmd === "transformCase" && value) {
           const text = r.toString();
           const transformed =
             value === "uppercase"
@@ -1116,17 +1421,63 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
           const textNode = document.createTextNode(transformed);
           r.deleteContents();
           r.insertNode(textNode);
-          r.setStartAfter(textNode);
-          r.collapse(true);
+          r.setStartBefore(textNode);
+          r.setEndAfter(textNode);
           document.getSelection()?.removeAllRanges();
           document.getSelection()?.addRange(r);
+        }
+      };
+
+      if (cmd === "fontSize" || cmd === "fontName" || cmd === "transformCase") {
+        const sel = document.getSelection();
+        const savedRange = textToolbarRangeRef.current;
+        const primaryRange = (sel?.rangeCount ? sel.getRangeAt(0) : savedRange) ?? null;
+        const primaryEditable = primaryRange?.startContainer?.nodeType === Node.TEXT_NODE
+          ? (primaryRange.startContainer as Node).parentElement?.closest?.("[data-editable='true']")
+          : (primaryRange?.startContainer as HTMLElement)?.closest?.("[data-editable='true']");
+
+        if (primaryRange && !primaryRange.collapsed) {
+          if (savedRange && (!sel || !sel.rangeCount || sel.getRangeAt(0).collapsed)) {
+            sel?.removeAllRanges();
+            sel?.addRange(savedRange);
+          }
+          const r = sel?.rangeCount ? sel.getRangeAt(0) : primaryRange;
+          if (r) applyToOneRange(r);
+        }
+
+        multiSet.forEach((el) => {
+          if (!body?.contains(el)) {
+            multiSet.delete(el);
+            el.classList.remove("text-placeholder-multi-selected");
+            return;
+          }
+          if (el === primaryEditable && primaryRange && !primaryRange.collapsed) return;
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          applyFormatToRange(range, cmd, value);
         });
       } else {
+        const execCommands = ["justifyLeft", "justifyCenter", "justifyRight", "foreColor", "bold", "italic", "underline", "strikeThrough"];
+        if (multiSet.size > 1 && execCommands.includes(cmd)) {
+          const first = multiSet.values().next().value as HTMLElement | undefined;
+          if (first && body?.contains(first)) {
+            const r = document.createRange();
+            r.selectNodeContents(first);
+            const execSel = document.getSelection();
+            execSel?.removeAllRanges();
+            execSel?.addRange(r);
+          }
+        }
         document.execCommand(cmd, false, value);
       }
-      setTimeout(() => commitFromDom(), 0);
+      const nextFormat = getFormatFromSelection();
+      if (nextFormat) setSelectionFormat(nextFormat);
+      const sel = document.getSelection();
+      if (sel?.rangeCount) {
+        textToolbarRangeRef.current = sel.getRangeAt(0).cloneRange();
+      }
     },
-    [commitFromDom, applyToSelection]
+    [applyFormatToRange, getFormatFromSelection, colorValues, pushSnapshot]
   );
 
   /* ---------------------------------------------------------------- */
@@ -1248,6 +1599,34 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
       const target = e.target as HTMLElement;
       if (!bodyRef.current.contains(target) || target === bodyRef.current) return;
       if ((e.metaKey || e.ctrlKey) && e.button === 0) {
+        const editable = target.closest<HTMLElement>("[data-editable='true']");
+        if (editable) {
+          e.preventDefault();
+          const set = multiSelectedEditablesRef.current;
+          if (set.has(editable)) {
+            set.delete(editable);
+            editable.classList.remove("text-placeholder-multi-selected");
+          } else {
+            set.add(editable);
+            editable.classList.add("text-placeholder-multi-selected");
+          }
+          if (set.size > 0) {
+            const first = Array.from(set)[0];
+            const range = document.createRange();
+            range.selectNodeContents(first);
+            textToolbarRangeRef.current = range.cloneRange();
+            const rect = first.getBoundingClientRect();
+            setTextToolbar({ x: rect.left + rect.width / 2, y: rect.top - 48 });
+            setSelectionFormat(getFormatFromSelection());
+            setResizeTarget(first);
+          } else {
+            setTextToolbar(null);
+            setSelectionFormat(null);
+            setResizeTarget(null);
+            textToolbarRangeRef.current = null;
+          }
+          return;
+        }
         e.preventDefault();
         selectedElementRef.current?.classList.remove("element-selected");
         selectedElementRef.current = target;
@@ -1255,7 +1634,7 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
         setSelectionTick((t) => t + 1);
       }
     },
-    [isEditMode]
+    [isEditMode, getFormatFromSelection]
   );
 
   const onBodyKeyDown = useCallback(
@@ -1361,11 +1740,12 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     setColorValues(parsed.initialColors);
     setFontOverride("Default");
     setBgOverride("");
+    setProjectName(template.name);
     clearSavedState();
     const initial: Snapshot = { bodyHTML: parsed.bodyHTML, colors: { ...parsed.initialColors } };
     pushSnapshot(initial);
     setToast("Reset to original");
-  }, [parsed.bodyHTML, parsed.initialColors, clearSavedState, pushSnapshot]);
+  }, [parsed.bodyHTML, parsed.initialColors, clearSavedState, pushSnapshot, template.name]);
 
   type CopySnapshot = Snapshot & { savedAt?: number };
   const saveAsCopy = useCallback(() => {
@@ -1437,10 +1817,25 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
   /* P4: Keyboard shortcuts (fixed deps) ---------------------------- */
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent) => {
-      const isMeta = event.ctrlKey || event.metaKey;
-      if (!isMeta) return;
-
       const key = event.key.toLowerCase();
+      const isMeta = event.ctrlKey || event.metaKey;
+
+      if (key === "a" && isMeta && isEditMode) {
+        const active = document.activeElement as HTMLElement | null;
+        const editable = active?.closest?.("[data-editable='true']") as HTMLElement | null;
+        if (editable) {
+          event.preventDefault();
+          const sel = window.getSelection();
+          if (!sel) return;
+          const range = document.createRange();
+          range.selectNodeContents(editable);
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+        return;
+      }
+
+      if (!isMeta) return;
       if (key === "z" && !event.shiftKey) {
         event.preventDefault();
         undo();
@@ -1457,7 +1852,7 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     };
     document.addEventListener("keydown", onKeydown);
     return () => document.removeEventListener("keydown", onKeydown);
-  }, [undo, redo, zoomIn, zoomOut]);
+  }, [undo, redo, zoomIn, zoomOut, isEditMode]);
 
   /* Sync bodyHTML to DOM ------------------------------------------- */
   useLayoutEffect(() => {
@@ -1571,6 +1966,112 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
         syncDemographicBars(body);
     };
 
+    const onEditableMouseDown = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      const editable = target.closest<HTMLElement>("[data-editable='true']");
+      if (!editable || event.ctrlKey || event.metaKey) return;
+      /* Select-all only when clicking on the placeholder border (edge); otherwise allow normal text selection. */
+      const borderMargin = 8;
+      const r = editable.getBoundingClientRect();
+      const x = event.clientX - r.left;
+      const y = event.clientY - r.top;
+      const onBorder =
+        x <= borderMargin ||
+        x >= r.width - borderMargin ||
+        y <= borderMargin ||
+        y >= r.height - borderMargin;
+      if (!onBorder) return;
+      const sel = window.getSelection();
+      if (!sel) return;
+      const alreadyFullSelection =
+        sel.rangeCount > 0 &&
+        (() => {
+          const r = sel.getRangeAt(0);
+          if (!editable.contains(r.startContainer) || !editable.contains(r.endContainer))
+            return false;
+          const all = document.createRange();
+          all.selectNodeContents(editable);
+          return r.toString() === all.toString();
+        })();
+      if (!alreadyFullSelection) {
+        event.preventDefault();
+        multiSelectedEditablesRef.current.forEach((el) => {
+          el.classList.remove("text-placeholder-multi-selected");
+        });
+        multiSelectedEditablesRef.current.clear();
+        const range = document.createRange();
+        range.selectNodeContents(editable);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    };
+
+    body.addEventListener("mousedown", onEditableMouseDown, true);
+
+    const onMarqueeMouseDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!body.contains(target)) return;
+      if (target.closest("[data-editable='true']")) return;
+      if (target.closest("img")) return;
+      if (e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      marqueeRectRef.current = { startX, startY, endX: startX, endY: startY };
+      setMarquee(marqueeRectRef.current);
+      const onMove = (e2: MouseEvent) => {
+        marqueeRectRef.current = marqueeRectRef.current
+          ? { ...marqueeRectRef.current, endX: e2.clientX, endY: e2.clientY }
+          : null;
+        setMarquee(marqueeRectRef.current);
+      };
+      const onUp = () => {
+        const rect = marqueeRectRef.current;
+        marqueeRectRef.current = null;
+        setMarquee(null);
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onUp);
+        if (!rect || !bodyRef.current) return;
+        const left = Math.min(rect.startX, rect.endX);
+        const right = Math.max(rect.startX, rect.endX);
+        const top = Math.min(rect.startY, rect.endY);
+        const bottom = Math.max(rect.startY, rect.endY);
+        const editables = bodyRef.current.querySelectorAll<HTMLElement>("[data-editable='true']");
+        const hit: HTMLElement[] = [];
+        editables.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          if (!(r.right < left || r.left > right || r.bottom < top || r.top > bottom)) hit.push(el);
+        });
+        if (hit.length > 0) {
+          multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+          multiSelectedEditablesRef.current.clear();
+          hit.forEach((el) => {
+            multiSelectedEditablesRef.current.add(el);
+            el.classList.add("text-placeholder-multi-selected");
+          });
+          const first = hit[0];
+          const range = document.createRange();
+          range.selectNodeContents(first);
+          textToolbarRangeRef.current = range.cloneRange();
+          const r = first.getBoundingClientRect();
+          setTextToolbar({ x: r.left + r.width / 2, y: r.top - 48 });
+          setResizeTarget(first);
+          setTimeout(() => setSelectionFormat(getFormatFromSelection()), 0);
+        } else {
+          /* Click outside / marquee with no hit: clear toolbar and resize */
+          multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+          multiSelectedEditablesRef.current.clear();
+          setTextToolbar(null);
+          setResizeTarget(null);
+        }
+      };
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    };
+    body.addEventListener("mousedown", onMarqueeMouseDown, true);
+
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (!target) return;
@@ -1606,6 +2107,8 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
       window.clearTimeout(retry);
       body.removeEventListener("blur", onBlur, true);
       body.removeEventListener("input", onInput, true);
+      body.removeEventListener("mousedown", onEditableMouseDown, true);
+      body.removeEventListener("mousedown", onMarqueeMouseDown, true);
       body.removeEventListener("click", onClick);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1621,32 +2124,73 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
     const onSelectionChange = () => {
       const sel = window.getSelection();
       const focusInToolbar = document.activeElement?.closest?.(".text-toolbar-wrap");
+      const savedRange = textToolbarRangeRef.current;
+
       if (!sel || !sel.rangeCount) {
-        if (!focusInToolbar) {
-          setTextToolbar(null);
-          textToolbarRangeRef.current = null;
+        if (focusInToolbar && savedRange && document.contains(savedRange.startContainer)) {
+          try {
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+          } catch {
+            setTextToolbar(null);
+            setSelectionFormat(null);
+            setResizeTarget(null);
+            textToolbarRangeRef.current = null;
+            multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+            multiSelectedEditablesRef.current.clear();
+          }
+          return;
         }
-        return;
-      }
-      const anchor = sel.anchorNode;
-      const parent =
-        anchor instanceof HTMLElement ? anchor : anchor?.parentElement;
-      if (!parent?.closest("[data-editable='true']")) {
         if (!focusInToolbar) {
           setTextToolbar(null);
+          setSelectionFormat(null);
+          setResizeTarget(null);
           textToolbarRangeRef.current = null;
+          multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+          multiSelectedEditablesRef.current.clear();
         }
         return;
       }
       const range = sel.getRangeAt(0);
+      const anchor = sel.anchorNode;
+      const parent =
+        anchor instanceof HTMLElement ? anchor : anchor?.parentElement;
+      if (!parent?.closest("[data-editable='true']")) {
+        if (focusInToolbar && savedRange && document.contains(savedRange.startContainer)) {
+          try {
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+          } catch {
+            setTextToolbar(null);
+            setSelectionFormat(null);
+            setResizeTarget(null);
+            textToolbarRangeRef.current = null;
+            multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+            multiSelectedEditablesRef.current.clear();
+          }
+          return;
+        }
+        if (!focusInToolbar) {
+          setTextToolbar(null);
+          setSelectionFormat(null);
+          setResizeTarget(null);
+          textToolbarRangeRef.current = null;
+          multiSelectedEditablesRef.current.forEach((el) => el.classList.remove("text-placeholder-multi-selected"));
+          multiSelectedEditablesRef.current.clear();
+        }
+        return;
+      }
       textToolbarRangeRef.current = range.cloneRange();
       const rect = range.getBoundingClientRect();
       setTextToolbar({ x: rect.left + rect.width / 2, y: rect.top - 48 });
+      setSelectionFormat(getFormatFromSelection());
+      const editable = parent?.closest("[data-editable='true']") as HTMLElement | null;
+      setResizeTarget(editable ?? null);
     };
 
     document.addEventListener("selectionchange", onSelectionChange);
     return () => document.removeEventListener("selectionchange", onSelectionChange);
-  }, [isEditMode]);
+  }, [isEditMode, getFormatFromSelection]);
 
   /* ---------------------------------------------------------------- */
   /*  Inline handlers                                                  */
@@ -1744,7 +2288,17 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
               </button>
             </span>
           </span>
-          <strong className="editor-template-name">{template.name}</strong>
+          <label className="editor-project-name-wrap" title="Export filename">
+            <span className="editor-project-name-label">Project</span>
+            <input
+              type="text"
+              className="editor-project-name-input"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder={template.name}
+              aria-label="Project name (export filename)"
+            />
+          </label>
           <button className="editor-btn" onClick={undo} disabled={!isEditMode || !canUndo} type="button" aria-label="Undo">
             Undo
           </button>
@@ -1780,6 +2334,20 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
           </span>
         </div>
         <div className="editor-right">
+          {/* Reset to original template */}
+          <button
+            className="editor-btn"
+            onClick={() => {
+              if (window.confirm("Reset to original template? All unsaved changes will be lost.")) {
+                resetToOriginal();
+              }
+            }}
+            type="button"
+            title="Reset to original template"
+            aria-label="Reset to original template"
+          >
+            Reset
+          </button>
           {/* Add floating image */}
           <button
             className="editor-btn"
@@ -1988,14 +2556,17 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
             </details>
           )}
 
-          {/* Save as copy / Load copy */}
+          {/* Save as copy / Save as new template / Load copy */}
           <details>
-            <summary className="sidebar-heading">Save as copy</summary>
+            <summary className="sidebar-heading">Save</summary>
             <p className="sidebar-muted" style={{ marginBottom: 8 }}>
-              Save current state as a copy (stored in this browser). You can load it later from this list.
+              Save as copy (browser) or download as a new HTML template file.
             </p>
-            <button className="editor-btn accent" onClick={saveAsCopy} type="button" style={{ width: "100%", marginBottom: 8 }} aria-label="Save current edits as a new copy">
+            <button className="editor-btn accent" onClick={saveAsCopy} type="button" style={{ width: "100%", marginBottom: 6 }} aria-label="Save current edits as a new copy">
               Save as copy
+            </button>
+            <button className="editor-btn accent" onClick={saveAsNewTemplate} type="button" style={{ width: "100%", marginBottom: 8 }} aria-label="Save as new template (download HTML)">
+              Save as new template
             </button>
             {copyKeys.length > 0 && (
               <div className="sidebar-field">
@@ -2033,7 +2604,16 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
 
           {/* F7: Reset to original */}
           <div style={{ marginTop: "auto", paddingTop: 16 }}>
-            <button className="editor-btn" onClick={resetToOriginal} type="button" style={{ width: "100%" }}>
+            <button
+              className="editor-btn"
+              onClick={() => {
+                if (window.confirm("Reset to original template? All unsaved changes will be lost.")) {
+                  resetToOriginal();
+                }
+              }}
+              type="button"
+              style={{ width: "100%" }}
+            >
               Reset to Original
             </button>
           </div>
@@ -2071,9 +2651,33 @@ export default function EditorClient({ template }: { template: LoadedTemplate })
         <TextToolbar
           position={textToolbar}
           onFormat={onFormat}
-          fontFamily={fontOverride}
+          initialFormat={selectionFormat}
           onFontFamilyChange={(font) => onFormat("fontName", font)}
           fonts={CURATED_FONTS}
+        />
+      )}
+
+      {/* Resize handles for selected text placeholder */}
+      {isEditMode && resizeTarget && (
+        <ResizeHandles target={resizeTarget} onCommit={commitFromDom} />
+      )}
+
+      {/* Marquee selection rectangle */}
+      {marquee && (
+        <div
+          className="marquee-selection"
+          style={{
+            position: "fixed",
+            left: Math.min(marquee.startX, marquee.endX),
+            top: Math.min(marquee.startY, marquee.endY),
+            width: Math.abs(marquee.endX - marquee.startX),
+            height: Math.abs(marquee.endY - marquee.startY),
+            border: "2px dashed #6366f1",
+            backgroundColor: "rgba(99, 102, 241, 0.1)",
+            pointerEvents: "none",
+            zIndex: 60,
+          }}
+          aria-hidden
         />
       )}
 
