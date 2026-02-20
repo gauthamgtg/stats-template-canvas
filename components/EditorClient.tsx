@@ -410,12 +410,14 @@ function parseRgbOrHex(cssColor: string): string {
 function TextToolbar({
   position,
   onFormat,
+  onFontSizeStep,
   initialFormat,
   onFontFamilyChange,
   fonts,
 }: {
   position: { x: number; y: number };
   onFormat: (cmd: string, value?: string) => void;
+  onFontSizeStep?: (delta: number) => void;
   initialFormat: SelectionFormat | null;
   onFontFamilyChange: (font: string) => void;
   fonts: string[];
@@ -515,12 +517,16 @@ function TextToolbar({
           )}
         </div>
 
-        {/* Font size: [-] [number] [+] */}
+        {/* Font size: [-] [number] [+] — use step so each selection uses its own current size */}
         <div className="text-toolbar-size-control">
           <button
             type="button"
             className="text-toolbar-size-btn"
-            onMouseDown={(e) => { e.preventDefault(); applySize(fontSize - FONT_SIZE_STEP); }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              if (onFontSizeStep) onFontSizeStep(-FONT_SIZE_STEP);
+              else applySize(fontSize - FONT_SIZE_STEP);
+            }}
             title="Decrease size"
             aria-label="Decrease font size"
           >
@@ -532,7 +538,11 @@ function TextToolbar({
           <button
             type="button"
             className="text-toolbar-size-btn"
-            onMouseDown={(e) => { e.preventDefault(); applySize(fontSize + FONT_SIZE_STEP); }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              if (onFontSizeStep) onFontSizeStep(FONT_SIZE_STEP);
+              else applySize(fontSize + FONT_SIZE_STEP);
+            }}
             title="Increase size"
             aria-label="Increase font size"
           >
@@ -1307,9 +1317,14 @@ ${currentBody}
     const savedRange = textToolbarRangeRef.current;
     const range = (sel?.rangeCount ? sel.getRangeAt(0) : savedRange) ?? null;
     if (!range) return null;
-    const node = range.startContainer;
-    const el: HTMLElement | null =
-      node.nodeType === Node.TEXT_NODE ? (node.parentElement as HTMLElement) : (node as HTMLElement);
+    let node: Node = range.startContainer;
+    if (node.nodeType === Node.TEXT_NODE) {
+      node = node.parentElement as HTMLElement;
+    } else if (node.nodeType === Node.ELEMENT_NODE && range.startOffset < node.childNodes.length) {
+      const child = node.childNodes[range.startOffset];
+      if (child?.nodeType === Node.ELEMENT_NODE) node = child;
+    }
+    const el = node as HTMLElement | null;
     if (!el || typeof getComputedStyle === "undefined" || !document.contains(el)) return null;
     const style = getComputedStyle(el);
     const fontSizeStr = style.fontSize || "";
@@ -1320,6 +1335,20 @@ ${currentBody}
     if (!fontFamily) fontFamily = "Default";
     const color = parseRgbOrHex(style.color || "#000000");
     return { fontSize, fontFamily, color };
+  }, []);
+
+  const getFontSizeFromRange = useCallback((range: Range): number => {
+    let node: Node = range.startContainer;
+    if (node.nodeType === Node.TEXT_NODE) {
+      node = node.parentElement as HTMLElement;
+    } else if (node.nodeType === Node.ELEMENT_NODE && range.startOffset < node.childNodes.length) {
+      const child = node.childNodes[range.startOffset];
+      if (child?.nodeType === Node.ELEMENT_NODE) node = child;
+    }
+    const el = node as HTMLElement;
+    const style = typeof getComputedStyle !== "undefined" ? getComputedStyle(el) : null;
+    const fontSizeStr = style?.fontSize || "";
+    return Math.round(parseFloat(fontSizeStr)) || 16;
   }, []);
 
   const applyToSelection = useCallback(
@@ -1478,6 +1507,69 @@ ${currentBody}
       }
     },
     [applyFormatToRange, getFormatFromSelection, colorValues, pushSnapshot]
+  );
+
+  const onFontSizeStep = useCallback(
+    (delta: number) => {
+      const body = bodyRef.current;
+      if (body) pushSnapshot({ bodyHTML: body.innerHTML, colors: { ...colorValues } });
+      const multiSet = multiSelectedEditablesRef.current;
+      const sel = document.getSelection();
+      const savedRange = textToolbarRangeRef.current;
+      const primaryRange = (sel?.rangeCount ? sel.getRangeAt(0) : savedRange) ?? null;
+      const primaryEditable =
+        primaryRange?.startContainer?.nodeType === Node.TEXT_NODE
+          ? (primaryRange.startContainer as Node).parentElement?.closest?.("[data-editable='true']")
+          : (primaryRange?.startContainer as HTMLElement)?.closest?.("[data-editable='true']");
+
+      const applySizeToRange = (r: Range, sizePx: string) => {
+        applyFormatToRange(r, "fontSize", sizePx);
+      };
+
+      if (primaryRange && !primaryRange.collapsed) {
+        if (savedRange && (!sel || !sel.rangeCount || sel.getRangeAt(0).collapsed)) {
+          sel?.removeAllRanges();
+          sel?.addRange(savedRange);
+        }
+        const r = sel?.rangeCount ? sel.getRangeAt(0) : primaryRange;
+        if (r) {
+          const current = getFontSizeFromRange(r);
+          const next = Math.min(FONT_SIZE_MAX, Math.max(FONT_SIZE_MIN, current + delta));
+          const fragment = r.cloneContents();
+          const div = document.createElement("div");
+          div.appendChild(fragment);
+          const span = document.createElement("span");
+          span.style.fontSize = `${next}px`;
+          span.innerHTML = div.innerHTML;
+          r.deleteContents();
+          r.insertNode(span);
+          r.setStartBefore(span);
+          r.setEndAfter(span);
+          document.getSelection()?.removeAllRanges();
+          document.getSelection()?.addRange(r);
+        }
+      }
+
+      multiSet.forEach((el) => {
+        if (!body?.contains(el)) {
+          multiSet.delete(el);
+          el.classList.remove("text-placeholder-multi-selected");
+          return;
+        }
+        if (el === primaryEditable && primaryRange && !primaryRange.collapsed) return;
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const current = getFontSizeFromRange(range);
+        const next = Math.min(FONT_SIZE_MAX, Math.max(FONT_SIZE_MIN, current + delta));
+        applySizeToRange(range, `${next}px`);
+      });
+
+      const nextFormat = getFormatFromSelection();
+      if (nextFormat) setSelectionFormat(nextFormat);
+      const s = document.getSelection();
+      if (s?.rangeCount) textToolbarRangeRef.current = s.getRangeAt(0).cloneRange();
+    },
+    [applyFormatToRange, getFormatFromSelection, colorValues, pushSnapshot, getFontSizeFromRange]
   );
 
   /* ---------------------------------------------------------------- */
@@ -2651,6 +2743,7 @@ ${currentBody}
         <TextToolbar
           position={textToolbar}
           onFormat={onFormat}
+          onFontSizeStep={onFontSizeStep}
           initialFormat={selectionFormat}
           onFontFamilyChange={(font) => onFormat("fontName", font)}
           fonts={CURATED_FONTS}
